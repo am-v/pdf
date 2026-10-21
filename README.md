@@ -175,7 +175,7 @@ pdf.com.in/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/pdf-com-in.git
+   git clone https://github.com/am-v/pdf.git
    cd pdf-com-in
    ```
 

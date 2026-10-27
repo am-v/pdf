@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, HeartHandshake } from 'lucide-react';
+import { HeartHandshake } from 'lucide-react';
 import { TOOLS } from '../config/tools';
 import { ToolCard } from '../components/common/ToolCard';
 import { CategoryFilter } from '../components/common/CategoryFilter';

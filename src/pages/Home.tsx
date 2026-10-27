@@ -42,7 +42,7 @@ export function Home() {
           <HeartHandshake className="w-3.5 h-3.5" />
           <span>Privacy First · Zero Server Uploads</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white tracking-tight mb-4 leading-15">
+        <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white tracking-tight mb-4">
           Every PDF tool you need, <br className="hidden sm:inline" />
           <span className="underline decoration-accent underline-offset-6">100% on your device.</span>
         </h1>

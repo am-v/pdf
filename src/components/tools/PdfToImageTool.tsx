@@ -15,6 +15,7 @@ import { Progress } from '@base-ui/react';
 import { ToolPageHeader } from '../common/ToolPageHeader';
 import { ToolFileDropzone } from '../common/ToolFileDropzone';
 import { usePdfToImage } from '../../hooks/pdf/usePdfToImage';
+import { useMobileResultScroll } from '../../hooks/useMobileResultScroll';
 import type { PdfToImageDpi, PdfToImageFormat } from '../../core/pdf/pdf-to-image/pdfToImage.types';
 import { blobToUint8Array, formatBytes } from '../../core/shared';
 
@@ -42,6 +43,7 @@ export function PdfToImageTool() {
     result,
     progress
   } = usePdfToImage();
+  const resultRef = useMobileResultScroll(isSuccess && Boolean(result));
 
   const handleFile = useCallback(async (file: File) => {
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
@@ -116,7 +118,7 @@ export function PdfToImageTool() {
               {/* Loaded Document Card */}
               <div className="flex items-center justify-between p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/80 dark:border-neutral-700/60">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-accent text-accent-foreground flex items-center justify-center shrink-0">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
@@ -139,7 +141,7 @@ export function PdfToImageTool() {
 
               {/* Rendered Images Grid */}
               {isSuccess && result && (
-                <div className="space-y-6">
+                <div ref={resultRef} className="space-y-6">
                   {/* Top Bar with ZIP Download */}
                   <div className="flex items-center justify-between p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60">
                     <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
@@ -157,7 +159,7 @@ export function PdfToImageTool() {
                       <a
                         href={result.zipUrl}
                         download={`${customFileName.trim() || 'pdf-images'}.zip`}
-                        className="py-2 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white text-xs font-semibold flex items-center gap-2 transition-colors shadow-sm"
+                        className="py-2 px-4 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground text-xs font-semibold flex items-center gap-2 transition-colors shadow-sm"
                       >
                         <Archive className="w-4 h-4" />
                         Download All (ZIP)
@@ -204,7 +206,7 @@ export function PdfToImageTool() {
                             <a
                               href={img.url}
                               download={img.fileName}
-                              className="p-1.5 rounded-lg text-primary hover:bg-primary/10 transition-colors"
+                              className="p-1.5 rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors"
                               title="Download"
                             >
                               <Download className="w-3.5 h-3.5" />
@@ -224,7 +226,7 @@ export function PdfToImageTool() {
         <div className="space-y-6">
           <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-6 shadow-sm">
             <div className="flex items-center gap-2 pb-4 border-b border-neutral-200 dark:border-neutral-800">
-              <Sliders className="w-5 h-5 text-primary" />
+              <Sliders className="w-5 h-5 rounded bg-accent p-0.5 text-accent-foreground" />
               <h2 className="font-semibold text-neutral-900 dark:text-neutral-100">
                 Conversion Settings
               </h2>
@@ -244,17 +246,15 @@ export function PdfToImageTool() {
                     key={opt.id}
                     type="button"
                     onClick={() => setFormat(opt.id as PdfToImageFormat)}
-                    className={`p-3 rounded-xl text-left transition-all ${
-                      format === opt.id
-                        ? 'bg-primary text-white shadow-sm'
-                        : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
-                    }`}
+                    className={`p-3 rounded-xl text-left transition-all ${format === opt.id
+                      ? 'bg-accent text-accent-foreground shadow-sm'
+                      : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                      }`}
                   >
                     <p className="text-xs font-bold">{opt.label}</p>
                     <p
-                      className={`text-[10px] ${
-                        format === opt.id ? 'text-white/80' : 'text-neutral-500 dark:text-neutral-400'
-                      }`}
+                      className={`text-[10px] ${format === opt.id ? 'text-accent-foreground' : 'text-neutral-700 dark:text-neutral-300'
+                        }`}
                     >
                       {opt.desc}
                     </p>
@@ -278,17 +278,15 @@ export function PdfToImageTool() {
                     key={opt.value}
                     type="button"
                     onClick={() => setDpi(opt.value as PdfToImageDpi)}
-                    className={`py-2 px-2 text-center rounded-xl transition-all ${
-                      dpi === opt.value
-                        ? 'bg-primary text-white shadow-sm'
-                        : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
-                    }`}
+                    className={`py-2 px-2 text-center rounded-xl transition-all ${dpi === opt.value
+                      ? 'bg-accent text-accent-foreground shadow-sm'
+                      : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                      }`}
                   >
                     <p className="text-xs font-bold">{opt.label}</p>
                     <p
-                      className={`text-[10px] ${
-                        dpi === opt.value ? 'text-white/80' : 'text-neutral-500 dark:text-neutral-400'
-                      }`}
+                      className={`text-[10px] ${dpi === opt.value ? 'text-accent-foreground' : 'text-neutral-700 dark:text-neutral-300'
+                        }`}
                     >
                       {opt.desc}
                     </p>
@@ -312,7 +310,7 @@ export function PdfToImageTool() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Leave blank if not protected"
-                className="w-full px-3 py-2 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/80 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/80 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-accent"
               />
             </div>
 
@@ -353,7 +351,7 @@ export function PdfToImageTool() {
                   <Progress.Track className="h-full w-full">
                     <Progress.Indicator
                       style={{ width: `${progress}%` }}
-                      className="h-full bg-primary transition-all duration-200"
+                      className="h-full bg-accent transition-all duration-200"
                     />
                   </Progress.Track>
                 </Progress.Root>
@@ -377,7 +375,7 @@ export function PdfToImageTool() {
                 type="button"
                 onClick={handleConvert}
                 disabled={!loadedPdf || isProcessing}
-                className="w-full py-3 px-4 rounded-xl bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none text-white font-semibold text-sm transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-xl bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:pointer-events-none text-accent-foreground font-semibold text-sm transition-all shadow-md shadow-accent/20 flex items-center justify-center gap-2"
               >
                 {isProcessing ? (
                   <>

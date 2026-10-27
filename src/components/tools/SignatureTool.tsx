@@ -19,6 +19,7 @@ import { Progress, AlertDialog, Tabs } from '@base-ui/react';
 import { ToolPageHeader } from '../common/ToolPageHeader';
 import { ToolFileDropzone } from '../common/ToolFileDropzone';
 import { useSignature } from '../../hooks/pdf/useSignature';
+import { useMobileResultScroll } from '../../hooks/useMobileResultScroll';
 import { trimSignatureBlob } from '../../core/pdf/signature/trimSignature';
 import { formatBytes, blobToUint8Array, readPdfPageCount } from '../../core/shared';
 
@@ -70,6 +71,7 @@ export function SignatureTool() {
     objectUrl,
     progress
   } = useSignature();
+  const resultRef = useMobileResultScroll(isSuccess && Boolean(result));
 
   const handlePdfFile = useCallback(async (file: File) => {
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
@@ -282,18 +284,18 @@ export function SignatureTool() {
 
       {/* Success State */}
       {isSuccess && result && objectUrl && (
-        <div className="mb-8 p-6 sm:p-8 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl">
+        <div ref={resultRef} className="mb-8 p-6 sm:p-8 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-emerald-100 dark:bg-emerald-900/40 rounded-xl text-emerald-600 dark:text-emerald-400 mt-1 sm:mt-0">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
                   PDF Signed Successfully!
                 </h2>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Applied <span className="font-semibold text-slate-900 dark:text-white">{result.placedSignatureCount} signatures</span> across {result.pageCount} pages ({formatBytes(result.byteLength)}).
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Applied <span className="font-semibold text-gray-900 dark:text-white">{result.placedSignatureCount} signatures</span> across {result.pageCount} pages ({formatBytes(result.byteLength)}).
                 </p>
               </div>
             </div>
@@ -302,7 +304,7 @@ export function SignatureTool() {
               <a
                 href={objectUrl}
                 download={`${customFileName || 'signed'}.pdf`}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--primary)] hover:opacity-90 text-white rounded-xl font-semibold shadow-sm transition-all text-sm"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent hover:opacity-90 text-accent-foreground rounded-xl font-semibold shadow-sm transition-all text-sm"
               >
                 <Download className="w-4 h-4" />
                 Download Signed PDF
@@ -311,7 +313,7 @@ export function SignatureTool() {
                 href={objectUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium transition-colors text-sm"
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors text-sm"
                 title="Preview in new tab"
               >
                 <ExternalLink className="w-4 h-4" />
@@ -319,7 +321,7 @@ export function SignatureTool() {
               <button
                 type="button"
                 onClick={reset}
-                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium transition-colors text-sm"
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors text-sm"
                 title="Adjust placements"
               >
                 <RefreshCw className="w-4 h-4" />
@@ -381,16 +383,16 @@ export function SignatureTool() {
           {/* Main Signing Workspace */}
           <div className="lg:col-span-2 space-y-4">
             {/* Top Workspace Header */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-50 dark:bg-blue-950/50 rounded-xl text-[var(--primary)]">
+                <div className="p-2 bg-blue-50 dark:bg-blue-950/50 rounded-xl text-gray-900 dark:text-gray-100">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white text-sm truncate max-w-xs sm:max-w-md">
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm truncate max-w-xs sm:max-w-md">
                     {loadedPdf.file.name}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     Page {activePage} of {loadedPdf.pageCount} • {placements.length} signatures placed
                   </p>
                 </div>
@@ -398,23 +400,23 @@ export function SignatureTool() {
 
               {/* Page Navigator */}
               {loadedPdf.pageCount > 1 && (
-                <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 p-1 rounded-xl">
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 p-1 rounded-xl">
                   <button
                     type="button"
                     onClick={() => setActivePage((p) => Math.max(1, p - 1))}
                     disabled={activePage <= 1}
-                    className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 disabled:opacity-30 transition-colors"
+                    className="p-1.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 disabled:opacity-30 transition-colors"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
-                  <span className="text-xs font-semibold px-2 text-slate-700 dark:text-slate-300">
+                  <span className="text-xs font-semibold px-2 text-gray-700 dark:text-gray-300">
                     {activePage} / {loadedPdf.pageCount}
                   </span>
                   <button
                     type="button"
                     onClick={() => setActivePage((p) => Math.min(loadedPdf.pageCount, p + 1))}
                     disabled={activePage >= loadedPdf.pageCount}
-                    className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 disabled:opacity-30 transition-colors"
+                    className="p-1.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 disabled:opacity-30 transition-colors"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -428,27 +430,27 @@ export function SignatureTool() {
               onClick={handlePreviewClick}
               onMouseMove={onPreviewMouseMove}
               onMouseUp={onPreviewMouseUp}
-              className="bg-white dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 rounded-2xl relative min-h-[480px] sm:min-h-[580px] p-6 shadow-sm overflow-hidden select-none cursor-crosshair flex flex-col justify-between"
+              className="bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 rounded-2xl relative min-h-[480px] sm:min-h-[580px] p-6 shadow-sm overflow-hidden select-none cursor-crosshair flex flex-col justify-between"
             >
               {/* Watermark/guideline */}
               <div className="space-y-4 opacity-15 pointer-events-none">
-                <div className="h-3 bg-slate-300 dark:bg-slate-700 rounded-full w-1/3" />
-                <div className="h-2.5 bg-slate-300 dark:bg-slate-700 rounded-full w-full" />
-                <div className="h-2.5 bg-slate-300 dark:bg-slate-700 rounded-full w-5/6" />
-                <div className="h-2.5 bg-slate-300 dark:bg-slate-700 rounded-full w-4/5" />
-                <div className="h-2.5 bg-slate-300 dark:bg-slate-700 rounded-full w-full" />
-                <div className="h-2.5 bg-slate-300 dark:bg-slate-700 rounded-full w-3/4" />
+                <div className="h-3 bg-gray-300 dark:bg-gray-700 rounded-full w-1/3" />
+                <div className="h-2.5 bg-gray-300 dark:bg-gray-700 rounded-full w-full" />
+                <div className="h-2.5 bg-gray-300 dark:bg-gray-700 rounded-full w-5/6" />
+                <div className="h-2.5 bg-gray-300 dark:bg-gray-700 rounded-full w-4/5" />
+                <div className="h-2.5 bg-gray-300 dark:bg-gray-700 rounded-full w-full" />
+                <div className="h-2.5 bg-gray-300 dark:bg-gray-700 rounded-full w-3/4" />
               </div>
 
               {!signatureDataUrl && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center pointer-events-none">
-                  <div className="p-3 bg-blue-50 dark:bg-blue-950/50 rounded-2xl text-[var(--primary)] mb-3">
+                  <div className="p-3 bg-blue-50 dark:bg-blue-950/50 rounded-2xl text-gray-900 dark:text-gray-100 mb-3">
                     <PenTool className="w-6 h-6" />
                   </div>
-                  <h4 className="font-semibold text-slate-900 dark:text-white text-sm mb-1">
+                  <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
                     Create or select a signature first
                   </h4>
-                  <p className="text-xs text-slate-500 max-w-xs">
+                  <p className="text-xs text-gray-500 max-w-xs">
                     Click "Create Signature" in the sidebar to draw or upload your signature, then tap anywhere on this sheet.
                   </p>
                 </div>
@@ -471,13 +473,12 @@ export function SignatureTool() {
                         left: `${p.x}%`,
                         top: `${p.y}%`,
                         width: `${p.size}%`,
-                        transform: 'translate(-50%, -50%)'
+                        transform: 'trangray(-50%, -50%)'
                       }}
-                      className={`absolute cursor-move group/sig touch-none ${
-                        isSelected
-                          ? 'ring-2 ring-[var(--primary)] rounded-md'
-                          : 'ring-1 ring-slate-400/40 hover:ring-slate-400 rounded-md'
-                      }`}
+                      className={`absolute cursor-move group/sig touch-none ${isSelected
+                          ? 'ring-2 ring-accent rounded-md'
+                          : 'ring-1 ring-gray-400/40 hover:ring-gray-400 rounded-md'
+                        }`}
                     >
                       <img
                         src={p.dataUrl}
@@ -504,7 +505,7 @@ export function SignatureTool() {
                           {/* Resize handle */}
                           <div
                             onMouseDown={(e) => onPlacementMouseDown(e, p.id, 'resize')}
-                            className="absolute -bottom-2 -right-2 w-5 h-5 bg-[var(--primary)] border-2 border-white dark:border-slate-900 rounded-full cursor-nwse-resize shadow-md"
+                            className="absolute -bottom-2 -right-2 w-5 h-5 bg-accent border-2 border-white dark:border-gray-900 rounded-full cursor-nwse-resize shadow-md"
                             title="Drag to resize"
                           />
                         </>
@@ -514,14 +515,14 @@ export function SignatureTool() {
                 })}
 
               <div className="space-y-4 opacity-15 pointer-events-none">
-                <div className="h-2.5 bg-slate-300 dark:bg-slate-700 rounded-full w-full" />
-                <div className="h-2.5 bg-slate-300 dark:bg-slate-700 rounded-full w-3/4" />
-                <div className="h-2.5 bg-slate-300 dark:bg-slate-700 rounded-full w-1/2" />
+                <div className="h-2.5 bg-gray-300 dark:bg-gray-700 rounded-full w-full" />
+                <div className="h-2.5 bg-gray-300 dark:bg-gray-700 rounded-full w-3/4" />
+                <div className="h-2.5 bg-gray-300 dark:bg-gray-700 rounded-full w-1/2" />
               </div>
             </div>
 
             {/* Instruction footnote */}
-            <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
+            <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
               💡 Tip: Click anywhere on the page to stamp your signature. Drag to reposition, use the blue corner handle to resize.
             </p>
           </div>
@@ -529,14 +530,14 @@ export function SignatureTool() {
           {/* Sidebar Controls */}
           <div className="space-y-6">
             {/* Signature Box */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-              <h3 className="font-semibold text-slate-900 dark:text-white text-sm mb-4">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-4">
                 Active Signature
               </h3>
 
               {signatureDataUrl ? (
                 <div className="space-y-3">
-                  <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-center min-h-[90px]">
+                  <div className="p-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl flex items-center justify-center min-h-[90px]">
                     <img
                       src={signatureDataUrl}
                       alt="Active signature"
@@ -547,7 +548,7 @@ export function SignatureTool() {
                     <button
                       type="button"
                       onClick={() => setSignatureModalOpen(true)}
-                      className="flex-1 px-3 py-2 text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition-colors"
+                      className="flex-1 px-3 py-2 text-xs font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl transition-colors"
                     >
                       Change Signature
                     </button>
@@ -568,7 +569,7 @@ export function SignatureTool() {
                 <button
                   type="button"
                   onClick={() => setSignatureModalOpen(true)}
-                  className="w-full p-6 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-[var(--primary)] rounded-xl flex flex-col items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-[var(--primary)] transition-colors"
+                  className="w-full p-6 border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-accent rounded-xl flex flex-col items-center justify-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
                 >
                   <PenTool className="w-6 h-6" />
                   <span className="text-xs font-semibold">Draw or Upload Signature</span>
@@ -576,17 +577,17 @@ export function SignatureTool() {
               )}
 
               {/* Placements Counter */}
-              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
+              <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
                 <span>Stamps on page {activePage}:</span>
-                <span className="font-semibold text-slate-900 dark:text-white">
+                <span className="font-semibold text-gray-900 dark:text-white">
                   {placements.filter((p) => p.page === activePage).length}
                 </span>
               </div>
             </div>
 
             {/* Save & Download Card */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-              <label htmlFor="customFileName" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+              <label htmlFor="customFileName" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
                 Output Filename
               </label>
               <div className="flex items-center mb-6">
@@ -595,9 +596,9 @@ export function SignatureTool() {
                   type="text"
                   value={customFileName}
                   onChange={(e) => setCustomFileName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 dark:border-slate-700 rounded-l-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                  className="w-full px-3 py-2 text-xs border border-gray-200 dark:border-gray-700 rounded-l-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-accent"
                 />
-                <span className="px-3 py-2 text-xs border border-l-0 border-slate-200 dark:border-slate-700 rounded-r-xl bg-slate-50 dark:bg-slate-800 text-slate-500 font-mono">
+                <span className="px-3 py-2 text-xs border border-l-0 border-gray-200 dark:border-gray-700 rounded-r-xl bg-gray-50 dark:bg-gray-800 text-gray-500 font-mono">
                   .pdf
                 </span>
               </div>
@@ -605,15 +606,15 @@ export function SignatureTool() {
               {/* Progress */}
               {isProcessing && (
                 <div className="mb-4">
-                  <div className="flex justify-between text-xs text-slate-500 mb-1">
+                  <div className="flex justify-between text-xs text-gray-500 mb-1">
                     <span>Signing document...</span>
                     <span className="font-mono">{progress}%</span>
                   </div>
-                  <Progress.Root value={progress} className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <Progress.Root value={progress} className="h-2 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                     <Progress.Track className="h-full w-full">
                       <Progress.Indicator
-                        style={{ transform: `translateX(-${100 - progress}%)` }}
-                        className="h-full bg-[var(--primary)] transition-transform duration-200"
+                        style={{ transform: `trangrayX(-${100 - progress}%)` }}
+                        className="h-full bg-accent transition-transform duration-200"
                       />
                     </Progress.Track>
                   </Progress.Root>
@@ -624,7 +625,7 @@ export function SignatureTool() {
                 type="button"
                 onClick={handleExecute}
                 disabled={isProcessing || placements.length === 0}
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--primary)] hover:opacity-90 disabled:opacity-50 text-white rounded-xl font-semibold shadow-sm transition-all text-sm"
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent hover:opacity-90 disabled:opacity-50 text-accent-foreground rounded-xl font-semibold shadow-sm transition-all text-sm"
               >
                 {isProcessing ? 'Signing...' : `Sign & Save PDF (${placements.length} Signatures)`}
               </button>
@@ -636,31 +637,31 @@ export function SignatureTool() {
       {/* Signature Creation Modal */}
       {signatureModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-2xl">
+          <div className="w-full max-w-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                 Create Signature
               </h3>
               <button
                 type="button"
                 onClick={() => setSignatureModalOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"
+                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <Tabs.Root defaultValue="draw">
-              <Tabs.List className="flex border-b border-slate-200 dark:border-slate-800 mb-4">
+              <Tabs.List className="flex border-b border-gray-200 dark:border-gray-800 mb-4">
                 <Tabs.Tab
                   value="draw"
-                  className="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 data-[selected]:text-[var(--primary)] data-[selected]:border-b-2 data-[selected]:border-[var(--primary)] transition-colors"
+                  className="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-400 data-[selected]:text-gray-900 dark:data-[selected]:text-gray-100 data-[selected]:border-b-2 data-[selected]:border-accent transition-colors"
                 >
                   Draw Signature
                 </Tabs.Tab>
                 <Tabs.Tab
                   value="upload"
-                  className="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 data-[selected]:text-[var(--primary)] data-[selected]:border-b-2 data-[selected]:border-[var(--primary)] transition-colors"
+                  className="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-400 data-[selected]:text-gray-900 dark:data-[selected]:text-gray-100 data-[selected]:border-b-2 data-[selected]:border-accent transition-colors"
                 >
                   Upload Image
                 </Tabs.Tab>
@@ -668,7 +669,7 @@ export function SignatureTool() {
 
               {/* Draw Tab */}
               <Tabs.Panel value="draw" className="space-y-4">
-                <div className="border border-slate-200 dark:border-slate-700 rounded-2xl bg-white overflow-hidden shadow-inner">
+                <div className="border border-gray-200 dark:border-gray-700 rounded-2xl bg-white overflow-hidden shadow-inner">
                   <canvas
                     ref={canvasRef}
                     width={460}
@@ -686,16 +687,15 @@ export function SignatureTool() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-500">Ink:</span>
+                    <span className="text-xs text-gray-500">Ink:</span>
                     {['#000000', '#1e3a8a', '#0369a1'].map((c) => (
                       <button
                         key={c}
                         type="button"
                         onClick={() => setPenColor(c)}
                         style={{ backgroundColor: c }}
-                        className={`w-6 h-6 rounded-full border-2 transition-transform ${
-                          penColor === c ? 'border-blue-500 scale-110' : 'border-transparent'
-                        }`}
+                        className={`w-6 h-6 rounded-full border-2 transition-transform ${penColor === c ? 'border-blue-500 scale-110' : 'border-transparent'
+                          }`}
                       />
                     ))}
                   </div>
@@ -704,14 +704,14 @@ export function SignatureTool() {
                     <button
                       type="button"
                       onClick={clearCanvas}
-                      className="px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                      className="px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                     >
                       Clear
                     </button>
                     <button
                       type="button"
                       onClick={saveDrawnSignature}
-                      className="px-4 py-1.5 text-xs font-semibold bg-[var(--primary)] text-white rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5"
+                      className="px-4 py-1.5 text-xs font-semibold bg-accent text-accent-foreground rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5"
                     >
                       <Check className="w-3.5 h-3.5" />
                       Use Signature
@@ -735,13 +735,13 @@ export function SignatureTool() {
                 />
                 <div
                   onClick={() => sigFileInputRef.current?.click()}
-                  className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-8 text-center cursor-pointer hover:border-[var(--primary)] transition-colors"
+                  className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl p-8 text-center cursor-pointer hover:border-accent transition-colors"
                 >
-                  <ImageIcon className="w-10 h-10 text-slate-400 mx-auto mb-2" />
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <ImageIcon className="w-10 h-10 text-gray-400 mx-auto mb-2" />
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                     Upload PNG, JPG, or WebP
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-gray-500">
                     Backgrounds and margins are auto-trimmed for crisp placement.
                   </p>
                 </div>
@@ -755,15 +755,15 @@ export function SignatureTool() {
       <AlertDialog.Root open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
         <AlertDialog.Portal>
           <AlertDialog.Backdrop className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity z-50" />
-          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl z-50">
-            <AlertDialog.Title className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -trangray-x-1/2 -trangray-y-1/2 w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-xl z-50">
+            <AlertDialog.Title className="text-lg font-bold text-gray-900 dark:text-white mb-2">
               Clear Current Document?
             </AlertDialog.Title>
-            <AlertDialog.Description className="text-sm text-slate-600 dark:text-slate-400 mb-6">
+            <AlertDialog.Description className="text-sm text-gray-600 dark:text-gray-400 mb-6">
               This will discard the currently loaded document and all placed signatures.
             </AlertDialog.Description>
             <div className="flex justify-end gap-3">
-              <AlertDialog.Close className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
+              <AlertDialog.Close className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">
                 Cancel
               </AlertDialog.Close>
               <button

@@ -52,7 +52,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <button
               type="button"
               onClick={this.handleRetry}
-              className="py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-xs transition-colors flex items-center gap-2 shadow-sm"
+              className="py-2.5 px-4 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-xs transition-colors flex items-center gap-2 shadow-sm"
             >
               <RefreshCw className="w-4 h-4" />
               Reload Application

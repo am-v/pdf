@@ -9,30 +9,44 @@
   --color-primary-light: var(--primary-light);
   --color-primary-dark: var(--primary-dark);
   --color-primary-foreground: var(--primary-foreground);
-  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--text-muted);
+  --font-sans: 'Google Sans Flex', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 :root {
   /* Minimal professional blue palette as primary token - replace hex code here to customize */
-  --primary: #2563eb;            /* Blue 600 - Main primary brand color */
-  --primary-hover: #1d4ed8;      /* Blue 700 - Hover state */
-  --primary-light: #eff6ff;      /* Blue 50 - Light tint for badges and dropzones */
-  --primary-dark: #1e40af;       /* Blue 800 - Deep accent */
-  --primary-foreground: #ffffff; /* White text on primary buttons */
+  --primary: #2563eb;
+  /* Blue 600 - Main primary brand color */
+  --primary-hover: #1d4ed8;
+  /* Blue 700 - Hover state */
+  --primary-light: #eff6ff;
+  /* Blue 50 - Light tint for badges and dropzones */
+  --primary-dark: #1e40af;
+  /* Blue 800 - Deep accent */
+  --primary-foreground: #ffffff;
+  /* White text on primary buttons */
 
   --background: #f8fafc;
   --surface: #ffffff;
   --surface-border: #e2e8f0;
   --text-primary: #0f172a;
-  --text-muted: #64748b;
+
+  --accent: oklch(88.24% .199188 160.136);
+  --accent-foreground: oklch(30.7% .0327 170.05);
 }
 
 .dark {
   /* Dark mode overrides for primary blue and dark background tokens */
-  --primary: #3b82f6;            /* Blue 500 - High contrast on dark */
-  --primary-hover: #60a5fa;      /* Blue 400 */
-  --primary-light: #172554;      /* Blue 950 - Subtle dark tint */
-  --primary-dark: #2563eb;       /* Blue 600 */
+  --primary: #3b82f6;
+  /* Blue 500 - High contrast on dark */
+  --primary-hover: #60a5fa;
+  /* Blue 400 */
+  --primary-light: #172554;
+  /* Blue 950 - Subtle dark tint */
+  --primary-dark: #2563eb;
+  /* Blue 600 */
   --primary-foreground: #ffffff;
 
   --background: #020617;
@@ -49,11 +63,16 @@ body {
   min-height: 100vh;
 }
 
+::selection {
+  color: var(--accent-foreground);
+  background-color: var(--accent);
+}
+
 @utility no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
 }
-

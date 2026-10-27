@@ -14,6 +14,7 @@ import { Progress, AlertDialog } from '@base-ui/react';
 import { ToolPageHeader } from '../common/ToolPageHeader';
 import { ToolFileDropzone } from '../common/ToolFileDropzone';
 import { useMetadata } from '../../hooks/pdf/useMetadata';
+import { useMobileResultScroll } from '../../hooks/useMobileResultScroll';
 import { formatBytes, blobToUint8Array } from '../../core/shared';
 
 interface LoadedPdfState {
@@ -47,6 +48,7 @@ export function MetadataTool() {
     objectUrl,
     progress
   } = useMetadata();
+  const resultRef = useMobileResultScroll(isSuccess && Boolean(result));
 
   const handleFile = useCallback(async (file: File) => {
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
@@ -140,17 +142,17 @@ export function MetadataTool() {
 
       {/* Success State */}
       {isSuccess && result && objectUrl && (
-        <div className="mb-8 p-6 sm:p-8 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl">
+        <div ref={resultRef} className="mb-8 p-6 sm:p-8 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-emerald-100 dark:bg-emerald-900/40 rounded-xl text-emerald-600 dark:text-emerald-400 mt-1 sm:mt-0">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
                   {result.isWiped ? 'Metadata Deep-Cleaned & Wiped!' : 'Metadata Updated Successfully!'}
                 </h2>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   {result.isWiped
                     ? `All author info, keywords, and hidden XML metadata streams have been stripped (${result.pageCount} pages, ${formatBytes(result.byteLength)}).`
                     : `Saved updated tags (${result.pageCount} pages, ${formatBytes(result.byteLength)}).`}
@@ -162,7 +164,7 @@ export function MetadataTool() {
               <a
                 href={objectUrl}
                 download={`${customFileName || 'metadata'}.pdf`}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--primary)] hover:opacity-90 text-white rounded-xl font-semibold shadow-sm transition-all text-sm"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent hover:opacity-90 text-accent-foreground rounded-xl font-semibold shadow-sm transition-all text-sm"
               >
                 <Download className="w-4 h-4" />
                 Download PDF
@@ -171,7 +173,7 @@ export function MetadataTool() {
                 href={objectUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium transition-colors text-sm"
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors text-sm"
                 title="Preview modified file"
               >
                 <ExternalLink className="w-4 h-4" />
@@ -179,7 +181,7 @@ export function MetadataTool() {
               <button
                 type="button"
                 onClick={reset}
-                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium transition-colors text-sm"
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors text-sm"
                 title="Modify again"
               >
                 <RefreshCw className="w-4 h-4" />
@@ -237,17 +239,17 @@ export function MetadataTool() {
           />
         </ToolFileDropzone>
       ) : (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-          <div className="flex items-center justify-between pb-6 border-b border-slate-100 dark:border-slate-800">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="flex items-center justify-between pb-6 border-b border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-blue-50 dark:bg-blue-950/50 rounded-xl text-[var(--primary)]">
+              <div className="p-2.5 bg-blue-50 dark:bg-blue-950/50 rounded-xl text-gray-900 dark:text-gray-100">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-semibold text-slate-900 dark:text-white text-base">
+                <h3 className="font-semibold text-gray-900 dark:text-white text-base">
                   {loadedPdf.file.name}
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                   {formatBytes(loadedPdf.file.size)}
                 </p>
               </div>
@@ -266,7 +268,7 @@ export function MetadataTool() {
           {/* Form Fields Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="titleInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="titleInput" className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
                 Document Title
               </label>
               <input
@@ -275,12 +277,12 @@ export function MetadataTool() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Annual Financial Report"
-                className="w-full px-3.5 py-2.5 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                className="w-full px-3.5 py-2.5 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </div>
 
             <div>
-              <label htmlFor="authorInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="authorInput" className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
                 Author
               </label>
               <input
@@ -289,12 +291,12 @@ export function MetadataTool() {
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 placeholder="e.g. Jane Doe"
-                className="w-full px-3.5 py-2.5 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                className="w-full px-3.5 py-2.5 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </div>
 
             <div>
-              <label htmlFor="subjectInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="subjectInput" className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
                 Subject
               </label>
               <input
@@ -303,12 +305,12 @@ export function MetadataTool() {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder="e.g. Quarterly Audit"
-                className="w-full px-3.5 py-2.5 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                className="w-full px-3.5 py-2.5 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </div>
 
             <div>
-              <label htmlFor="keywordsInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="keywordsInput" className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
                 Keywords (comma separated)
               </label>
               <input
@@ -317,12 +319,12 @@ export function MetadataTool() {
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
                 placeholder="e.g. report, finance, 2026"
-                className="w-full px-3.5 py-2.5 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                className="w-full px-3.5 py-2.5 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </div>
 
             <div>
-              <label htmlFor="creatorInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="creatorInput" className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
                 Application Creator
               </label>
               <input
@@ -331,12 +333,12 @@ export function MetadataTool() {
                 value={creator}
                 onChange={(e) => setCreator(e.target.value)}
                 placeholder="e.g. pdf.com.in"
-                className="w-full px-3.5 py-2.5 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                className="w-full px-3.5 py-2.5 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </div>
 
             <div>
-              <label htmlFor="producerInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="producerInput" className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
                 PDF Producer
               </label>
               <input
@@ -345,14 +347,14 @@ export function MetadataTool() {
                 value={producer}
                 onChange={(e) => setProducer(e.target.value)}
                 placeholder="e.g. pdf-lib"
-                className="w-full px-3.5 py-2.5 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                className="w-full px-3.5 py-2.5 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </div>
           </div>
 
           {/* Filename input */}
           <div>
-            <label htmlFor="customFileName" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+            <label htmlFor="customFileName" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
               Output Filename
             </label>
             <div className="flex items-center">
@@ -361,9 +363,9 @@ export function MetadataTool() {
                 type="text"
                 value={customFileName}
                 onChange={(e) => setCustomFileName(e.target.value)}
-                className="w-full px-3 py-2 text-xs border border-slate-200 dark:border-slate-700 rounded-l-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                className="w-full px-3 py-2 text-xs border border-gray-200 dark:border-gray-700 rounded-l-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-accent"
               />
-              <span className="px-3 py-2 text-xs border border-l-0 border-slate-200 dark:border-slate-700 rounded-r-xl bg-slate-50 dark:bg-slate-800 text-slate-500 font-mono">
+              <span className="px-3 py-2 text-xs border border-l-0 border-gray-200 dark:border-gray-700 rounded-r-xl bg-gray-50 dark:bg-gray-800 text-gray-500 font-mono">
                 .pdf
               </span>
             </div>
@@ -372,15 +374,15 @@ export function MetadataTool() {
           {/* Progress bar */}
           {isProcessing && (
             <div className="pt-2">
-              <div className="flex justify-between text-xs text-slate-500 mb-1">
+              <div className="flex justify-between text-xs text-gray-500 mb-1">
                 <span>Saving metadata changes...</span>
                 <span className="font-mono">{progress}%</span>
               </div>
-              <Progress.Root value={progress} className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+              <Progress.Root value={progress} className="h-2 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                 <Progress.Track className="h-full w-full">
                   <Progress.Indicator
-                    style={{ transform: `translateX(-${100 - progress}%)` }}
-                    className="h-full bg-[var(--primary)] transition-transform duration-200"
+                    style={{ transform: `trangrayX(-${100 - progress}%)` }}
+                    className="h-full bg-accent transition-transform duration-200"
                   />
                 </Progress.Track>
               </Progress.Root>
@@ -393,7 +395,7 @@ export function MetadataTool() {
               type="button"
               onClick={handleSave}
               disabled={isProcessing}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--primary)] hover:opacity-90 disabled:opacity-50 text-white rounded-xl font-semibold shadow-sm transition-all text-sm"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent hover:opacity-90 disabled:opacity-50 text-accent-foreground rounded-xl font-semibold shadow-sm transition-all text-sm"
             >
               {isProcessing ? 'Processing...' : 'Save Updated Metadata'}
             </button>
@@ -405,18 +407,18 @@ export function MetadataTool() {
       <AlertDialog.Root open={confirmWipeOpen} onOpenChange={setConfirmWipeOpen}>
         <AlertDialog.Portal>
           <AlertDialog.Backdrop className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity z-50" />
-          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl z-50">
+          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -trangray-x-1/2 -trangray-y-1/2 w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-xl z-50">
             <div className="w-12 h-12 bg-rose-50 dark:bg-rose-950/40 text-rose-600 rounded-xl flex items-center justify-center mb-4">
               <ShieldAlert className="w-6 h-6" />
             </div>
-            <AlertDialog.Title className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+            <AlertDialog.Title className="text-lg font-bold text-gray-900 dark:text-white mb-2">
               Deep Clean & Wipe Metadata?
             </AlertDialog.Title>
-            <AlertDialog.Description className="text-sm text-slate-600 dark:text-slate-400 mb-6">
+            <AlertDialog.Description className="text-sm text-gray-600 dark:text-gray-400 mb-6">
               This will irreversibly remove all author information, software signatures, creation dates, and XML tracking dictionaries embedded in this PDF.
             </AlertDialog.Description>
             <div className="flex justify-end gap-3">
-              <AlertDialog.Close className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
+              <AlertDialog.Close className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">
                 Cancel
               </AlertDialog.Close>
               <button
@@ -435,15 +437,15 @@ export function MetadataTool() {
       <AlertDialog.Root open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
         <AlertDialog.Portal>
           <AlertDialog.Backdrop className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity z-50" />
-          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl z-50">
-            <AlertDialog.Title className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -trangray-x-1/2 -trangray-y-1/2 w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-xl z-50">
+            <AlertDialog.Title className="text-lg font-bold text-gray-900 dark:text-white mb-2">
               Clear Current Document?
             </AlertDialog.Title>
-            <AlertDialog.Description className="text-sm text-slate-600 dark:text-slate-400 mb-6">
+            <AlertDialog.Description className="text-sm text-gray-600 dark:text-gray-400 mb-6">
               This will discard the currently loaded document and any metadata changes.
             </AlertDialog.Description>
             <div className="flex justify-end gap-3">
-              <AlertDialog.Close className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
+              <AlertDialog.Close className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">
                 Cancel
               </AlertDialog.Close>
               <button

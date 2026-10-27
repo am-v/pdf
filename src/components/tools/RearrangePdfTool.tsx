@@ -18,6 +18,7 @@ import { Progress, AlertDialog } from '@base-ui/react';
 import { ToolPageHeader } from '../common/ToolPageHeader';
 import { ToolFileDropzone } from '../common/ToolFileDropzone';
 import { useRearrangePdf } from '../../hooks/pdf/useRearrangePdf';
+import { useMobileResultScroll } from '../../hooks/useMobileResultScroll';
 import { formatBytes, blobToUint8Array, readPdfPageCount } from '../../core/shared';
 
 interface PageItem {
@@ -51,6 +52,7 @@ export function RearrangePdfTool() {
     objectUrl,
     progress
   } = useRearrangePdf();
+  const resultRef = useMobileResultScroll(isSuccess && Boolean(result));
 
   const handleFile = useCallback(async (file: File) => {
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
@@ -164,18 +166,18 @@ export function RearrangePdfTool() {
 
       {/* Success State */}
       {isSuccess && result && objectUrl && (
-        <div className="mb-8 p-6 sm:p-8 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl">
+        <div ref={resultRef} className="mb-8 p-6 sm:p-8 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-emerald-100 dark:bg-emerald-900/40 rounded-xl text-emerald-600 dark:text-emerald-400 mt-1 sm:mt-0">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
                   PDF Pages Rearranged Successfully!
                 </h2>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  New document has <span className="font-semibold text-slate-900 dark:text-white">{result.pageCount} pages</span> ({formatBytes(result.byteLength)}). Original had {result.originalPageCount} pages.
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  New document has <span className="font-semibold text-gray-900 dark:text-white">{result.pageCount} pages</span> ({formatBytes(result.byteLength)}). Original had {result.originalPageCount} pages.
                 </p>
               </div>
             </div>
@@ -184,7 +186,7 @@ export function RearrangePdfTool() {
               <a
                 href={objectUrl}
                 download={`${customFileName || 'rearranged'}.pdf`}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--primary)] hover:opacity-90 text-white rounded-xl font-semibold shadow-sm transition-all text-sm"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent hover:opacity-90 text-accent-foreground rounded-xl font-semibold shadow-sm transition-all text-sm"
               >
                 <Download className="w-4 h-4" />
                 Download PDF
@@ -193,7 +195,7 @@ export function RearrangePdfTool() {
                 href={objectUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium transition-colors text-sm"
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors text-sm"
                 title="Preview in new tab"
               >
                 <ExternalLink className="w-4 h-4" />
@@ -201,7 +203,7 @@ export function RearrangePdfTool() {
               <button
                 type="button"
                 onClick={reset}
-                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium transition-colors text-sm"
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors text-sm"
                 title="Adjust order"
               >
                 <RefreshCw className="w-4 h-4" />
@@ -260,17 +262,17 @@ export function RearrangePdfTool() {
       ) : (
         <div className="space-y-6">
           {/* Controls Bar */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-6 shadow-sm">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-blue-50 dark:bg-blue-950/50 rounded-xl text-[var(--primary)]">
+                <div className="p-2.5 bg-blue-50 dark:bg-blue-950/50 rounded-xl text-gray-900 dark:text-gray-100">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base truncate max-w-xs sm:max-w-md">
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base truncate max-w-xs sm:max-w-md">
                     {loadedPdf.file.name}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {formatBytes(loadedPdf.file.size)} • Original: {loadedPdf.pageCount} pages • Output: {pages.length} pages
                   </p>
                 </div>
@@ -282,7 +284,7 @@ export function RearrangePdfTool() {
                   type="button"
                   onClick={reversePages}
                   disabled={isProcessing}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
                 >
                   <ArrowUpDown className="w-3.5 h-3.5" />
                   Reverse Order
@@ -291,7 +293,7 @@ export function RearrangePdfTool() {
                   type="button"
                   onClick={resetToOriginal}
                   disabled={isProcessing}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Reset Order
@@ -300,24 +302,24 @@ export function RearrangePdfTool() {
             </div>
 
             {/* Output File Name Setting */}
-            <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+            <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
                 <label htmlFor="fileNameInput" className="font-medium">Output filename:</label>
                 <input
                   id="fileNameInput"
                   type="text"
                   value={customFileName}
                   onChange={(e) => setCustomFileName(e.target.value)}
-                  className="px-2.5 py-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                  className="px-2.5 py-1 text-xs border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-accent"
                 />
-                <span className="text-slate-400 font-mono">.pdf</span>
+                <span className="text-gray-400 font-mono">.pdf</span>
               </div>
 
               <button
                 type="button"
                 onClick={handleExecute}
                 disabled={isProcessing || pages.length === 0}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--primary)] hover:opacity-90 disabled:opacity-50 text-white rounded-xl font-semibold shadow-sm transition-all text-sm"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-accent hover:opacity-90 disabled:opacity-50 text-accent-foreground rounded-xl font-semibold shadow-sm transition-all text-sm"
               >
                 {isProcessing ? 'Processing...' : `Save Rearranged PDF (${pages.length} pages)`}
               </button>
@@ -325,16 +327,16 @@ export function RearrangePdfTool() {
 
             {/* Progress Bar */}
             {isProcessing && (
-              <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                <div className="flex justify-between text-xs text-slate-500 mb-1">
+              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+                <div className="flex justify-between text-xs text-gray-500 mb-1">
                   <span>Reordering pages...</span>
                   <span className="font-mono">{progress}%</span>
                 </div>
-                <Progress.Root value={progress} className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <Progress.Root value={progress} className="h-2 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                   <Progress.Track className="h-full w-full">
                     <Progress.Indicator
-                      style={{ transform: `translateX(-${100 - progress}%)` }}
-                      className="h-full bg-[var(--primary)] transition-transform duration-200"
+                      style={{ transform: `trangrayX(-${100 - progress}%)` }}
+                      className="h-full bg-accent transition-transform duration-200"
                     />
                   </Progress.Track>
                 </Progress.Root>
@@ -351,38 +353,38 @@ export function RearrangePdfTool() {
               return (
                 <div
                   key={item.id}
-                  className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+                  className="group relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-3 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
                 >
                   {/* Sequence Badge */}
                   <div className="flex items-center justify-between mb-2">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-50 dark:bg-blue-950/60 text-[var(--primary)]">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-50 dark:bg-blue-950/60 text-gray-900 dark:text-gray-100">
                       #{index + 1}
                     </span>
-                    <span className="text-[11px] text-slate-400">
+                    <span className="text-[11px] text-gray-400">
                       Orig: p.{item.originalPageNumber}
                     </span>
                   </div>
 
                   {/* Page Visual Placeholder */}
-                  <div className="aspect-[3/4] bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col items-center justify-center p-3 text-center my-1 select-none">
-                    <FileText className="w-8 h-8 text-slate-400 dark:text-slate-500 mb-1" />
-                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  <div className="aspect-[3/4] bg-gray-50 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center p-3 text-center my-1 select-none">
+                    <FileText className="w-8 h-8 text-gray-400 dark:text-gray-500 mb-1" />
+                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                       Page {item.originalPageNumber}
                     </span>
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-[10px] text-gray-400">
                       Position {index + 1}
                     </span>
                   </div>
 
                   {/* Actions Bar */}
-                  <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between gap-1">
+                  <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-800/60 flex items-center justify-between gap-1">
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
                         onClick={() => movePage(index, index - 1)}
                         disabled={isFirst || isProcessing}
                         title="Move left / up"
-                        className="p-1 rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                        className="p-1 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
                       >
                         <ArrowUp className="w-3.5 h-3.5 rotate-[-90deg]" />
                       </button>
@@ -391,7 +393,7 @@ export function RearrangePdfTool() {
                         onClick={() => movePage(index, index + 1)}
                         disabled={isLast || isProcessing}
                         title="Move right / down"
-                        className="p-1 rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                        className="p-1 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
                       >
                         <ArrowDown className="w-3.5 h-3.5 rotate-[-90deg]" />
                       </button>
@@ -403,7 +405,7 @@ export function RearrangePdfTool() {
                         onClick={() => duplicatePage(index)}
                         disabled={isProcessing}
                         title="Duplicate this page"
-                        className="p-1 rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 transition-colors"
+                        className="p-1 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 transition-colors"
                       >
                         <Copy className="w-3.5 h-3.5" />
                       </button>
@@ -429,15 +431,15 @@ export function RearrangePdfTool() {
       <AlertDialog.Root open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
         <AlertDialog.Portal>
           <AlertDialog.Backdrop className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity z-50" />
-          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl z-50">
-            <AlertDialog.Title className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -trangray-x-1/2 -trangray-y-1/2 w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-xl z-50">
+            <AlertDialog.Title className="text-lg font-bold text-gray-900 dark:text-white mb-2">
               Clear Current Document?
             </AlertDialog.Title>
-            <AlertDialog.Description className="text-sm text-slate-600 dark:text-slate-400 mb-6">
+            <AlertDialog.Description className="text-sm text-gray-600 dark:text-gray-400 mb-6">
               This will discard the currently loaded document and any page reordering changes.
             </AlertDialog.Description>
             <div className="flex justify-end gap-3">
-              <AlertDialog.Close className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
+              <AlertDialog.Close className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">
                 Cancel
               </AlertDialog.Close>
               <button

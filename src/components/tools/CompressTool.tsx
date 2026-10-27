@@ -15,6 +15,7 @@ import { Progress } from '@base-ui/react';
 import { ToolPageHeader } from '../common/ToolPageHeader';
 import { ToolFileDropzone } from '../common/ToolFileDropzone';
 import { useCompressPdf } from '../../hooks/pdf/useCompressPdf';
+import { useMobileResultScroll } from '../../hooks/useMobileResultScroll';
 import type { CompressQuality } from '../../core/pdf/compress/compressPdf.types';
 import { blobToUint8Array, formatBytes } from '../../core/shared';
 
@@ -41,6 +42,7 @@ export function CompressTool() {
     objectUrl,
     progress
   } = useCompressPdf();
+  const resultRef = useMobileResultScroll(isSuccess && Boolean(result));
 
   const handleFile = useCallback(async (file: File) => {
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
@@ -112,7 +114,7 @@ export function CompressTool() {
               {/* Selected File Card */}
               <div className="flex items-center justify-between p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/80 dark:border-neutral-700/60">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-accent text-accent-foreground flex items-center justify-center shrink-0">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
@@ -135,7 +137,7 @@ export function CompressTool() {
 
               {/* Compression Success Comparison */}
               {isSuccess && result && objectUrl && (
-                <div className="space-y-6">
+                <div ref={resultRef} className="space-y-6">
                   {/* Results Card */}
                   <div className="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 space-y-4">
                     <div className="flex items-center justify-between">
@@ -177,7 +179,7 @@ export function CompressTool() {
                       <a
                         href={objectUrl}
                         download={downloadName}
-                        className="flex-1 py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm"
+                        className="flex-1 py-2.5 px-4 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm"
                       >
                         <Download className="w-4 h-4" />
                         Download Compressed PDF
@@ -203,7 +205,7 @@ export function CompressTool() {
         <div className="space-y-6">
           <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-6 shadow-sm">
             <div className="flex items-center gap-2 pb-4 border-b border-neutral-200 dark:border-neutral-800">
-              <Sliders className="w-5 h-5 text-primary" />
+              <Sliders className="w-5 h-5 rounded bg-accent p-0.5 text-accent-foreground" />
               <h2 className="font-semibold text-neutral-900 dark:text-neutral-100">
                 Compression Level
               </h2>
@@ -234,7 +236,7 @@ export function CompressTool() {
                   onClick={() => setQuality(tier.id as CompressQuality)}
                   className={`w-full p-3 rounded-xl text-left border transition-all ${
                     quality === tier.id
-                      ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary'
+                      ? 'border-accent bg-accent/5 shadow-sm ring-1 ring-accent'
                       : 'border-neutral-200 dark:border-neutral-700/80 bg-neutral-50 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800'
                   }`}
                 >
@@ -243,7 +245,7 @@ export function CompressTool() {
                       {tier.title}
                     </p>
                     {tier.id === 'medium' && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-primary/10 text-primary">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-accent/10 text-gray-900 dark:text-gray-100">
                         Default
                       </span>
                     )}
@@ -292,7 +294,7 @@ export function CompressTool() {
                   <Progress.Track className="h-full w-full">
                     <Progress.Indicator
                       style={{ width: `${progress}%` }}
-                      className="h-full bg-primary transition-all duration-200"
+                      className="h-full bg-accent transition-all duration-200"
                     />
                   </Progress.Track>
                 </Progress.Root>
@@ -316,7 +318,7 @@ export function CompressTool() {
                 type="button"
                 onClick={handleCompress}
                 disabled={!loadedPdf || isProcessing}
-                className="w-full py-3 px-4 rounded-xl bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none text-white font-semibold text-sm transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-xl bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:pointer-events-none text-accent-foreground font-semibold text-sm transition-all shadow-md shadow-accent/20 flex items-center justify-center gap-2"
               >
                 {isProcessing ? (
                   <>

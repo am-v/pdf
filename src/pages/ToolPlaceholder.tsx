@@ -10,21 +10,21 @@ export function ToolPlaceholder() {
     <div className="max-w-3xl mx-auto px-4 py-16 text-center">
       <Link
         to="/"
-        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-primary transition-colors mb-8"
+        className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors mb-8"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to All Tools
       </Link>
 
-      <div className="p-8 sm:p-12 rounded-3xl bg-white border border-slate-200/80 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-        <div className="w-16 h-16 rounded-2xl bg-primary-light text-primary flex items-center justify-center mx-auto mb-6 shadow-sm">
+      <div className="p-8 sm:p-12 rounded-3xl bg-white border border-gray-200/80 shadow-sm dark:bg-gray-900 dark:border-gray-800">
+        <div className="w-16 h-16 rounded-2xl bg-accent text-accent-foreground flex items-center justify-center mx-auto mb-6 shadow-sm">
           {tool?.icon ? <tool.icon className="w-8 h-8" /> : <Construction className="w-8 h-8" />}
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
           {tool?.title || 'Tool'}
         </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
+        <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6">
           {tool?.description || 'Tool details'}
         </p>
 

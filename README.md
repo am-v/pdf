@@ -115,7 +115,7 @@ The application enforces a strict unidirectional data flow and clean separation 
 |:---|:---|
 | **Frontend Framework** | [React 19](https://react.dev/) with [TypeScript 5.7](https://www.typescriptlang.org/) |
 | **Build & Bundler** | [Vite 6](https://vitejs.dev/) with Rollup chunk splitting |
-| **Styling & Design System** | [Tailwind CSS v4](https://tailwindcss.com/) with custom `@theme` tokens & Geist font |
+| **Styling & Design System** | [Tailwind CSS v4](https://tailwindcss.com/) with custom `@theme` tokens & Google Sans Flex font |
 | **Component Primitives** | [@base-ui/react](https://base-ui.com/) (accessible headless components) |
 | **Icons** | [Lucide React](https://lucide.dev/) |
 | **Routing** | [React Router v7](https://reactrouter.com/) with dynamic lazy-loading |
@@ -156,7 +156,7 @@ pdf.com.in/
 │   ├── App.tsx                  # Root application router with lazy chunk loading
 │   ├── index.css                # Global design system tokens and Tailwind v4 setup
 │   └── main.tsx                 # Application entry point
-├── index.html                   # HTML template with Geist & dark mode bootstrapper
+├── index.html                   # HTML template with Google Sans Flex & dark mode bootstrapper
 ├── package.json                 # Project dependencies and scripts
 ├── tsconfig.json                # TypeScript project configuration
 └── vite.config.ts               # Vite configuration, Rollup manual chunking & Vitest setup

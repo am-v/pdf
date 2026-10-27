@@ -13,6 +13,7 @@ import { Progress, AlertDialog } from '@base-ui/react';
 import { ToolPageHeader } from '../common/ToolPageHeader';
 import { ToolFileDropzone } from '../common/ToolFileDropzone';
 import { useRotatePdf } from '../../hooks/pdf/useRotatePdf';
+import { useMobileResultScroll } from '../../hooks/useMobileResultScroll';
 import { formatBytes, blobToUint8Array, readPdfPageCount } from '../../core/shared';
 
 interface LoadedRotatePdfState {
@@ -40,6 +41,7 @@ export function RotatePdfTool() {
     objectUrl,
     progress
   } = useRotatePdf();
+  const resultRef = useMobileResultScroll(isSuccess && Boolean(result));
 
   const handleFile = useCallback(async (file: File) => {
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
@@ -112,14 +114,14 @@ export function RotatePdfTool() {
 
       {/* SUCCESS STATE */}
       {isSuccess && result && objectUrl && (
-        <div className="p-8 rounded-3xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 shadow-sm text-center">
+        <div ref={resultRef} className="p-8 rounded-3xl bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-800 shadow-sm text-center">
           <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-black text-slate-900 dark:text-white mb-1">
+          <h2 className="text-xl font-black text-gray-900 dark:text-white mb-1">
             PDF Rotated Successfully!
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">
             Applied rotation to {result.rotatedPageCount} of {result.pageCount} page(s) ({formatBytes(result.byteLength)}).
           </p>
 
@@ -127,7 +129,7 @@ export function RotatePdfTool() {
             <a
               href={objectUrl}
               download={`${customFileName || 'rotated'}.pdf`}
-              className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow-md shadow-primary/20 hover:bg-primary-hover active:scale-98 transition-all"
+              className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-accent-foreground font-bold text-sm shadow-md shadow-accent/20 hover:bg-accent/90 active:scale-98 transition-all"
             >
               <Download className="w-4 h-4" />
               Download Rotated PDF
@@ -136,7 +138,7 @@ export function RotatePdfTool() {
               href={objectUrl}
               target="_blank"
               rel="noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             >
               <ExternalLink className="w-4 h-4" />
               Preview
@@ -145,7 +147,7 @@ export function RotatePdfTool() {
 
           <button
             onClick={handleStartOver}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-primary transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Rotate Another Document
@@ -188,18 +190,18 @@ export function RotatePdfTool() {
               className="p-8 sm:p-14 rounded-3xl"
             />
           ) : (
-            <div className="p-6 rounded-3xl bg-white border border-slate-200/90 dark:bg-slate-900 dark:border-slate-800 shadow-xs space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-gray-200/90 dark:bg-gray-900 dark:border-gray-800 shadow-xs space-y-6">
               {/* Document Overview Bar */}
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800/80">
+              <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-800/80">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-accent text-accent-foreground flex items-center justify-center shrink-0">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                    <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
                       {loadedPdf.file.name}
                     </p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-gray-400">
                       {loadedPdf.pageCount} Pages • {formatBytes(loadedPdf.file.size)}
                     </p>
                   </div>
@@ -208,7 +210,7 @@ export function RotatePdfTool() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={rotateAllPages}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-light text-primary text-xs font-bold hover:bg-primary-light/80 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 text-gray-900 dark:text-gray-100 text-xs font-bold hover:bg-accent/20 transition-colors cursor-pointer"
                   >
                     <RotateCw className="w-3.5 h-3.5" />
                     Rotate All 90°
@@ -216,7 +218,7 @@ export function RotatePdfTool() {
                   {hasRotations && (
                     <button
                       onClick={resetAllRotations}
-                      className="text-xs font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 px-2 py-1 cursor-pointer"
+                      className="text-xs font-semibold text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 px-2 py-1 cursor-pointer"
                     >
                       Reset
                     </button>
@@ -232,7 +234,7 @@ export function RotatePdfTool() {
 
               {/* Page Grid */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-3">
                   Document Pages (Click any page or button to rotate 90°)
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-1 scrollbar-thin">
@@ -245,24 +247,23 @@ export function RotatePdfTool() {
                         className={`
                           p-4 rounded-2xl border text-center cursor-pointer select-none transition-all duration-200 group relative
                           ${rot !== 0
-                            ? 'border-primary bg-primary-light/30 shadow-xs'
-                            : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 hover:border-primary/50'}
+                            ? 'border-accent bg-accent/10 shadow-xs'
+                            : 'border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 hover:border-accent/50'}
                         `}
                       >
-                        <div className="w-16 h-20 mx-auto mb-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center transition-transform duration-300 shadow-xs"
-                             style={{ transform: `rotate(${rot}deg)` }}>
-                          <span className="text-xs font-black text-slate-400 group-hover:text-primary">
+                        <div className="w-16 h-20 mx-auto mb-3 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center justify-center transition-transform duration-300 shadow-xs"
+                          style={{ transform: `rotate(${rot}deg)` }}>
+                          <span className="text-xs font-black text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100">
                             {pageNum}
                           </span>
                         </div>
 
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-slate-700 dark:text-slate-300">
+                          <span className="font-bold text-gray-700 dark:text-gray-300">
                             Page {pageNum}
                           </span>
-                          <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                            rot !== 0 ? 'bg-primary text-white' : 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
-                          }`}>
+                          <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${rot !== 0 ? 'bg-accent text-accent-foreground' : 'bg-gray-200 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            }`}>
                             {rot}°
                           </span>
                         </div>
@@ -273,9 +274,9 @@ export function RotatePdfTool() {
               </div>
 
               {/* Filename & Progress */}
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="pt-4 border-t border-gray-100 dark:border-gray-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex-1 max-w-sm">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">
                     Output Filename
                   </label>
                   <div className="flex items-center">
@@ -284,23 +285,23 @@ export function RotatePdfTool() {
                       value={customFileName}
                       onChange={(e) => setCustomFileName(e.target.value)}
                       placeholder="pdf-com-in-rotated"
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:outline-none focus:border-primary"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-accent"
                     />
-                    <span className="ml-2 text-xs text-slate-400 font-bold">.pdf</span>
+                    <span className="ml-2 text-xs text-gray-400 font-bold">.pdf</span>
                   </div>
                 </div>
 
                 {isProcessing && (
                   <div className="flex-1 max-w-xs space-y-1">
-                    <div className="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <div className="flex justify-between text-xs font-bold text-gray-700 dark:text-gray-300">
                       <span>Applying Rotations...</span>
                       <span>{progress}%</span>
                     </div>
                     <Progress.Root value={progress} className="w-full">
-                      <Progress.Track className="relative h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                      <Progress.Track className="relative h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
                         <Progress.Indicator
                           style={{ width: `${progress}%` }}
-                          className="h-full bg-primary transition-all duration-200 rounded-full"
+                          className="h-full bg-accent transition-all duration-200 rounded-full"
                         />
                       </Progress.Track>
                     </Progress.Root>
@@ -312,7 +313,7 @@ export function RotatePdfTool() {
               <button
                 onClick={handleSave}
                 disabled={isProcessing}
-                className="w-full py-3.5 rounded-2xl bg-primary text-white font-bold text-sm shadow-md shadow-primary/20 hover:bg-primary-hover active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3.5 rounded-2xl bg-accent text-accent-foreground font-bold text-sm shadow-md shadow-accent/20 hover:bg-accent/90 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 {isProcessing ? (
                   <>
@@ -335,15 +336,15 @@ export function RotatePdfTool() {
       <AlertDialog.Root open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
         <AlertDialog.Portal>
           <AlertDialog.Backdrop className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 animate-in fade-in-0 duration-150" />
-          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 focus:outline-none">
-            <AlertDialog.Title className="text-base font-bold text-slate-900 dark:text-white mb-2">
+          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -trangray-x-1/2 -trangray-y-1/2 w-full max-w-sm p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl z-50 focus:outline-none">
+            <AlertDialog.Title className="text-base font-bold text-gray-900 dark:text-white mb-2">
               Change document?
             </AlertDialog.Title>
-            <AlertDialog.Description className="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+            <AlertDialog.Description className="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
               This will discard your current document and rotation changes.
             </AlertDialog.Description>
             <div className="flex justify-end gap-2">
-              <AlertDialog.Close className="px-4 py-2 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+              <AlertDialog.Close className="px-4 py-2 text-xs font-semibold rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                 Cancel
               </AlertDialog.Close>
               <button

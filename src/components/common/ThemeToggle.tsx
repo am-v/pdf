@@ -40,14 +40,14 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={handleToggle}
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:text-primary dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+      className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:text-gray-900 dark:hover:text-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-accent/40 cursor-pointer"
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {isDark ? (
         <Sun className="h-4 w-4 transition-transform duration-200 hover:rotate-45 text-amber-400" />
       ) : (
-        <Moon className="h-4 w-4 transition-transform duration-200 hover:-rotate-12 text-slate-600" />
+        <Moon className="h-4 w-4 transition-transform duration-200 hover:-rotate-12 text-gray-600" />
       )}
     </button>
   );

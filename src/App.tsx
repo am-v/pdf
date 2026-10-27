@@ -65,7 +65,7 @@ const RepairTool = lazy(() =>
 export function App() {
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors">
+    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors">
       <ScrollToTop />
       <Header />
       <main className="flex-1">

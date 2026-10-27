@@ -49,16 +49,16 @@ export function ToolFileDropzone({
       role="button"
       tabIndex={0}
       className={twMerge(
-        'border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950',
+        'border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950',
         isDragOver
-          ? 'border-primary bg-primary/5 scale-[1.005]'
+          ? 'border-accent bg-accent/5 scale-[1.005]'
           : 'border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 bg-white/50 dark:bg-neutral-900/50',
         className
       )}
     >
       {children}
       <div className="flex flex-col items-center justify-center space-y-3">
-        <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+        <div className="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center text-accent-foreground">
           <Icon className="w-8 h-8" />
         </div>
         <div>
@@ -66,7 +66,7 @@ export function ToolFileDropzone({
           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">{description}</p>
         </div>
         {buttonLabel && (
-          <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary-hover transition-colors">
+          <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-accent-foreground rounded-xl text-sm font-medium hover:bg-accent/90 transition-colors">
             {buttonLabel}
           </span>
         )}

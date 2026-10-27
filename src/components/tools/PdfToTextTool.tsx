@@ -16,6 +16,7 @@ import { Progress } from '@base-ui/react';
 import { ToolPageHeader } from '../common/ToolPageHeader';
 import { ToolFileDropzone } from '../common/ToolFileDropzone';
 import { usePdfToText } from '../../hooks/pdf/usePdfToText';
+import { useMobileResultScroll } from '../../hooks/useMobileResultScroll';
 import { blobToUint8Array, formatBytes } from '../../core/shared';
 
 interface LoadedPdf {
@@ -42,6 +43,7 @@ export function PdfToTextTool() {
     result,
     progress
   } = usePdfToText();
+  const resultRef = useMobileResultScroll(isSuccess && Boolean(result));
 
   const handleFile = useCallback(async (file: File) => {
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
@@ -145,7 +147,7 @@ export function PdfToTextTool() {
               {/* Selected File Card */}
               <div className="flex items-center justify-between p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/80 dark:border-neutral-700/60">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-accent text-accent-foreground flex items-center justify-center shrink-0">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
@@ -168,7 +170,7 @@ export function PdfToTextTool() {
 
               {/* Text Preview / Result */}
               {isSuccess && result && (
-                <div className="space-y-4">
+                <div ref={resultRef} className="space-y-4">
                   {/* Summary Bar */}
                   <div className="grid grid-cols-3 gap-3 p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-center">
                     <div>
@@ -232,7 +234,7 @@ export function PdfToTextTool() {
                     <button
                       type="button"
                       onClick={handleDownloadTxt}
-                      className="py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white text-xs font-semibold flex items-center gap-2 transition-colors shadow-sm"
+                      className="py-2.5 px-4 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground text-xs font-semibold flex items-center gap-2 transition-colors shadow-sm"
                     >
                       <Download className="w-4 h-4" />
                       Download .txt
@@ -248,7 +250,7 @@ export function PdfToTextTool() {
         <div className="space-y-6">
           <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-6 shadow-sm">
             <div className="flex items-center gap-2 pb-4 border-b border-neutral-200 dark:border-neutral-800">
-              <Sliders className="w-5 h-5 text-primary" />
+              <Sliders className="w-5 h-5 rounded bg-accent p-0.5 text-accent-foreground" />
               <h2 className="font-semibold text-neutral-900 dark:text-neutral-100">
                 Extraction Options
               </h2>
@@ -261,7 +263,7 @@ export function PdfToTextTool() {
                   type="checkbox"
                   checked={includeHeaders}
                   onChange={(e) => setIncludeHeaders(e.target.checked)}
-                  className="w-4 h-4 rounded text-primary focus:ring-primary border-neutral-300 dark:border-neutral-700"
+                  className="w-4 h-4 rounded text-gray-900 dark:text-gray-100 focus:ring-accent border-neutral-300 dark:border-neutral-700"
                 />
                 <span className="text-sm text-neutral-700 dark:text-neutral-300 font-medium">
                   Include Page Markers
@@ -287,7 +289,7 @@ export function PdfToTextTool() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Leave blank if not protected"
-                className="w-full px-3 py-2 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/80 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/80 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-accent"
               />
             </div>
 
@@ -328,7 +330,7 @@ export function PdfToTextTool() {
                   <Progress.Track className="h-full w-full">
                     <Progress.Indicator
                       style={{ width: `${progress}%` }}
-                      className="h-full bg-primary transition-all duration-200"
+                      className="h-full bg-accent transition-all duration-200"
                     />
                   </Progress.Track>
                 </Progress.Root>
@@ -352,7 +354,7 @@ export function PdfToTextTool() {
                 type="button"
                 onClick={handleExtract}
                 disabled={!loadedPdf || isProcessing}
-                className="w-full py-3 px-4 rounded-xl bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none text-white font-semibold text-sm transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-xl bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:pointer-events-none text-accent-foreground font-semibold text-sm transition-all shadow-md shadow-accent/20 flex items-center justify-center gap-2"
               >
                 {isProcessing ? (
                   <>

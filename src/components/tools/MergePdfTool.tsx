@@ -18,6 +18,7 @@ import { Progress, Tooltip, AlertDialog } from '@base-ui/react';
 import { ToolPageHeader } from '../common/ToolPageHeader';
 import { ToolFileDropzone } from '../common/ToolFileDropzone';
 import { useMergePdfs } from '../../hooks/pdf/useMergePdfs';
+import { useMobileResultScroll } from '../../hooks/useMobileResultScroll';
 import { formatBytes, blobToUint8Array } from '../../core/shared';
 
 interface SelectedFileItem {
@@ -45,6 +46,7 @@ export function MergePdfTool() {
     objectUrl,
     progress
   } = useMergePdfs();
+  const resultRef = useMobileResultScroll(isSuccess && Boolean(result));
 
   // Handle incoming raw files
   const handleFilesAdded = useCallback(async (files: FileList | File[]) => {
@@ -138,14 +140,14 @@ export function MergePdfTool() {
 
       {/* SUCCESS STATE */}
       {isSuccess && result && objectUrl && (
-        <div className="p-8 rounded-3xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 shadow-sm text-center">
+        <div ref={resultRef} className="p-8 rounded-3xl bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-800 shadow-sm text-center">
           <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-black text-slate-900 dark:text-white mb-1">
+          <h2 className="text-xl font-black text-gray-900 dark:text-white mb-1">
             PDFs Merged Successfully!
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">
             Merged {result.documentCount} documents into {result.pageCount} total pages ({formatBytes(result.byteLength)}).
           </p>
 
@@ -153,7 +155,7 @@ export function MergePdfTool() {
             <a
               href={objectUrl}
               download={`${customFileName || 'merged'}.pdf`}
-              className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow-md shadow-primary/20 hover:bg-primary-hover active:scale-98 transition-all"
+              className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-accent-foreground font-bold text-sm shadow-md shadow-accent/20 hover:bg-accent/90 active:scale-98 transition-all"
             >
               <Download className="w-4 h-4" />
               Download Merged PDF
@@ -162,7 +164,7 @@ export function MergePdfTool() {
               href={objectUrl}
               target="_blank"
               rel="noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             >
               <ExternalLink className="w-4 h-4" />
               Preview
@@ -171,7 +173,7 @@ export function MergePdfTool() {
 
           <button
             onClick={handleStartOver}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-primary transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Merge More Files
@@ -217,18 +219,18 @@ export function MergePdfTool() {
 
           {/* Selected Files List */}
           {selectedFiles.length > 0 && (
-            <div className="p-6 rounded-3xl bg-white border border-slate-200/90 dark:bg-slate-900 dark:border-slate-800 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800/80">
+            <div className="p-6 rounded-3xl bg-white border border-gray-200/90 dark:bg-gray-900 dark:border-gray-800 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-800/80">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white">
+                  <span className="text-xs font-bold text-gray-900 dark:text-white">
                     {selectedFiles.length} Documents Selected
                   </span>
-                  <span className="text-xs text-slate-400">({formatBytes(totalInputSize)})</span>
+                  <span className="text-xs text-gray-400">({formatBytes(totalInputSize)})</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="inline-flex items-center gap-1 px-3 py-1 text-xs font-bold text-primary hover:bg-primary-light rounded-lg transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 px-3 py-1 text-xs font-bold text-gray-900 dark:text-gray-100 hover:bg-accent/10 hover:underline hover:decoration-accent hover:underline-offset-4 rounded-lg transition-colors cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Add More
@@ -247,20 +249,20 @@ export function MergePdfTool() {
                 {selectedFiles.map((item, index) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/80 transition-all hover:border-slate-300 dark:hover:border-slate-700"
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-950 border border-gray-200/60 dark:border-gray-800/80 transition-all hover:border-gray-300 dark:hover:border-gray-700"
                   >
                     <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-primary shrink-0 shadow-xs">
+                      <div className="w-9 h-9 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center justify-center text-gray-900 dark:text-gray-100 shrink-0 shadow-xs">
                         <FileText className="w-4 h-4" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        <p className="text-xs font-bold text-gray-900 dark:text-white truncate">
                           {item.file.name}
                         </p>
-                        <div className="flex items-center gap-2 text-[10px] text-slate-400">
+                        <div className="flex items-center gap-2 text-[10px] text-gray-400">
                           <span>{formatBytes(item.file.size)}</span>
                           {item.rotation !== 0 && (
-                            <span className="px-1.5 py-0.2 rounded font-semibold bg-primary-light text-primary">
+                            <span className="px-1.5 py-0.2 rounded font-semibold bg-accent/10 text-gray-900 dark:text-gray-100">
                               {item.rotation}° rotation
                             </span>
                           )}
@@ -274,14 +276,14 @@ export function MergePdfTool() {
                         <Tooltip.Root>
                           <Tooltip.Trigger
                             onClick={() => rotateFile(item.id)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-white dark:hover:bg-slate-900 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white dark:hover:bg-gray-900 transition-colors cursor-pointer"
                             aria-label="Rotate 90 degrees"
                           >
                             <RotateCw className="w-4 h-4" />
                           </Tooltip.Trigger>
                           <Tooltip.Portal>
                             <Tooltip.Positioner side="top" sideOffset={4} className="z-50">
-                              <Tooltip.Popup className="px-2 py-0.5 text-[10px] font-medium text-white bg-slate-900 dark:bg-slate-800 rounded shadow-md">
+                              <Tooltip.Popup className="px-2 py-0.5 text-[10px] font-medium text-white bg-gray-900 dark:bg-gray-800 rounded shadow-md">
                                 Rotate 90°
                               </Tooltip.Popup>
                             </Tooltip.Positioner>
@@ -292,14 +294,14 @@ export function MergePdfTool() {
                           <Tooltip.Trigger
                             onClick={() => moveFile(index, 'up')}
                             disabled={index === 0}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-white dark:hover:bg-slate-900 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-white dark:hover:bg-gray-900 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer"
                             aria-label="Move Up"
                           >
                             <ArrowUp className="w-4 h-4" />
                           </Tooltip.Trigger>
                           <Tooltip.Portal>
                             <Tooltip.Positioner side="top" sideOffset={4} className="z-50">
-                              <Tooltip.Popup className="px-2 py-0.5 text-[10px] font-medium text-white bg-slate-900 dark:bg-slate-800 rounded shadow-md">
+                              <Tooltip.Popup className="px-2 py-0.5 text-[10px] font-medium text-white bg-gray-900 dark:bg-gray-800 rounded shadow-md">
                                 Move Up
                               </Tooltip.Popup>
                             </Tooltip.Positioner>
@@ -310,14 +312,14 @@ export function MergePdfTool() {
                           <Tooltip.Trigger
                             onClick={() => moveFile(index, 'down')}
                             disabled={index === selectedFiles.length - 1}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-white dark:hover:bg-slate-900 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-white dark:hover:bg-gray-900 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer"
                             aria-label="Move Down"
                           >
                             <ArrowDown className="w-4 h-4" />
                           </Tooltip.Trigger>
                           <Tooltip.Portal>
                             <Tooltip.Positioner side="top" sideOffset={4} className="z-50">
-                              <Tooltip.Popup className="px-2 py-0.5 text-[10px] font-medium text-white bg-slate-900 dark:bg-slate-800 rounded shadow-md">
+                              <Tooltip.Popup className="px-2 py-0.5 text-[10px] font-medium text-white bg-gray-900 dark:bg-gray-800 rounded shadow-md">
                                 Move Down
                               </Tooltip.Popup>
                             </Tooltip.Positioner>
@@ -327,14 +329,14 @@ export function MergePdfTool() {
                         <Tooltip.Root>
                           <Tooltip.Trigger
                             onClick={() => removeFile(item.id)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
                             aria-label="Remove File"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Tooltip.Trigger>
                           <Tooltip.Portal>
                             <Tooltip.Positioner side="top" sideOffset={4} className="z-50">
-                              <Tooltip.Popup className="px-2 py-0.5 text-[10px] font-medium text-white bg-slate-900 dark:bg-slate-800 rounded shadow-md">
+                              <Tooltip.Popup className="px-2 py-0.5 text-[10px] font-medium text-white bg-gray-900 dark:bg-gray-800 rounded shadow-md">
                                 Remove File
                               </Tooltip.Popup>
                             </Tooltip.Positioner>
@@ -347,9 +349,9 @@ export function MergePdfTool() {
               </div>
 
               {/* Output File Name Setting */}
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="pt-4 border-t border-gray-100 dark:border-gray-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex-1 max-w-sm">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">
                     Output Filename
                   </label>
                   <div className="flex items-center">
@@ -358,24 +360,24 @@ export function MergePdfTool() {
                       value={customFileName}
                       onChange={(e) => setCustomFileName(e.target.value)}
                       placeholder="pdf-com-in-merged"
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:outline-none focus:border-primary"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-accent"
                     />
-                    <span className="ml-2 text-xs text-slate-400 font-bold">.pdf</span>
+                    <span className="ml-2 text-xs text-gray-400 font-bold">.pdf</span>
                   </div>
                 </div>
 
                 {/* Progress bar during processing */}
                 {isProcessing && (
                   <div className="flex-1 max-w-xs space-y-1">
-                    <div className="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <div className="flex justify-between text-xs font-bold text-gray-700 dark:text-gray-300">
                       <span>Merging Documents...</span>
                       <span>{progress}%</span>
                     </div>
                     <Progress.Root value={progress} className="w-full">
-                      <Progress.Track className="relative h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                      <Progress.Track className="relative h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
                         <Progress.Indicator
                           style={{ width: `${progress}%` }}
-                          className="h-full bg-primary transition-all duration-200 rounded-full"
+                          className="h-full bg-accent transition-all duration-200 rounded-full"
                         />
                       </Progress.Track>
                     </Progress.Root>
@@ -387,7 +389,7 @@ export function MergePdfTool() {
               <button
                 onClick={handleMerge}
                 disabled={selectedFiles.length < 2 || isProcessing}
-                className="w-full py-3.5 rounded-2xl bg-primary text-white font-bold text-sm shadow-md shadow-primary/20 hover:bg-primary-hover active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3.5 rounded-2xl bg-accent text-accent-foreground font-bold text-sm shadow-md shadow-accent/20 hover:bg-accent/90 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 {isProcessing ? (
                   <>
@@ -410,15 +412,15 @@ export function MergePdfTool() {
       <AlertDialog.Root open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
         <AlertDialog.Portal>
           <AlertDialog.Backdrop className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 animate-in fade-in-0 duration-150" />
-          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 focus:outline-none">
-            <AlertDialog.Title className="text-base font-bold text-slate-900 dark:text-white mb-2">
+          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -trangray-x-1/2 -trangray-y-1/2 w-full max-w-sm p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl z-50 focus:outline-none">
+            <AlertDialog.Title className="text-base font-bold text-gray-900 dark:text-white mb-2">
               Clear all files?
             </AlertDialog.Title>
-            <AlertDialog.Description className="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+            <AlertDialog.Description className="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
               This will remove all {selectedFiles.length} selected documents and rotations from this session.
             </AlertDialog.Description>
             <div className="flex justify-end gap-2">
-              <AlertDialog.Close className="px-4 py-2 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+              <AlertDialog.Close className="px-4 py-2 text-xs font-semibold rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                 Cancel
               </AlertDialog.Close>
               <button

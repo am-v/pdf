@@ -17,6 +17,7 @@ import { Progress } from '@base-ui/react';
 import { ToolPageHeader } from '../common/ToolPageHeader';
 import { ToolFileDropzone } from '../common/ToolFileDropzone';
 import { useImageToPdf } from '../../hooks/pdf/useImageToPdf';
+import { useMobileResultScroll } from '../../hooks/useMobileResultScroll';
 import type { ImageToPdfPageSize, ImageToPdfOrientation } from '../../core/pdf/image-to-pdf/imageToPdf.types';
 import { formatBytes, blobToUint8Array } from '../../core/shared';
 
@@ -49,6 +50,7 @@ export function ImageToPdfTool() {
     objectUrl,
     progress
   } = useImageToPdf();
+  const resultRef = useMobileResultScroll(isSuccess && Boolean(result));
 
   const handleFiles = useCallback(async (files: FileList | File[]) => {
     const validFiles: File[] = [];
@@ -180,7 +182,7 @@ export function ImageToPdfTool() {
             <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ImageIcon className="w-5 h-5 text-primary" />
+                  <ImageIcon className="w-5 h-5 rounded bg-accent p-0.5 text-accent-foreground" />
                   <h2 className="font-semibold text-neutral-900 dark:text-neutral-100">
                     Selected Images ({images.length})
                   </h2>
@@ -254,7 +256,7 @@ export function ImageToPdfTool() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full py-2.5 px-4 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-primary text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-primary transition-colors flex items-center justify-center gap-2"
+                className="w-full py-2.5 px-4 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-accent text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" />
                 Add More Images
@@ -267,7 +269,7 @@ export function ImageToPdfTool() {
         <div className="space-y-6">
           <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-6 shadow-sm">
             <div className="flex items-center gap-2 pb-4 border-b border-neutral-200 dark:border-neutral-800">
-              <Sliders className="w-5 h-5 text-primary" />
+              <Sliders className="w-5 h-5 rounded bg-accent p-0.5 text-accent-foreground" />
               <h2 className="font-semibold text-neutral-900 dark:text-neutral-100">
                 Page Settings
               </h2>
@@ -292,7 +294,7 @@ export function ImageToPdfTool() {
                     onClick={() => setPageSize(opt.id)}
                     className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all ${
                       pageSize === opt.id
-                        ? 'bg-primary text-white shadow-sm'
+                        ? 'bg-accent text-accent-foreground shadow-sm'
                         : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                     }`}
                   >
@@ -327,7 +329,7 @@ export function ImageToPdfTool() {
                       onClick={() => setOrientation(opt.id)}
                       className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all ${
                         orientation === opt.id
-                          ? 'bg-primary text-white shadow-sm'
+                          ? 'bg-accent text-accent-foreground shadow-sm'
                           : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                       }`}
                     >
@@ -355,7 +357,7 @@ export function ImageToPdfTool() {
                     onClick={() => setMargin(opt.value)}
                     className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all ${
                       margin === opt.value
-                        ? 'bg-primary text-white shadow-sm'
+                        ? 'bg-accent text-accent-foreground shadow-sm'
                         : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                     }`}
                   >
@@ -402,7 +404,7 @@ export function ImageToPdfTool() {
                   <Progress.Track className="h-full w-full">
                     <Progress.Indicator
                       style={{ width: `${progress}%` }}
-                      className="h-full bg-primary transition-all duration-200"
+                      className="h-full bg-accent transition-all duration-200"
                     />
                   </Progress.Track>
                 </Progress.Root>
@@ -422,7 +424,7 @@ export function ImageToPdfTool() {
 
             {/* Success State */}
             {isSuccess && result && objectUrl && (
-              <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 space-y-3">
+              <div ref={resultRef} className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 space-y-3">
                 <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
                   <CheckCircle2 className="w-5 h-5" />
                   <span className="font-semibold text-sm">PDF Ready!</span>
@@ -434,7 +436,7 @@ export function ImageToPdfTool() {
                   <a
                     href={objectUrl}
                     download={downloadName}
-                    className="flex-1 py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm"
+                    className="flex-1 py-2.5 px-4 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm"
                   >
                     <Download className="w-4 h-4" />
                     Download PDF
@@ -458,7 +460,7 @@ export function ImageToPdfTool() {
                 type="button"
                 onClick={handleConvert}
                 disabled={images.length === 0 || isProcessing}
-                className="w-full py-3 px-4 rounded-xl bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none text-white font-semibold text-sm transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-xl bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:pointer-events-none text-accent-foreground font-semibold text-sm transition-all shadow-md shadow-accent/20 flex items-center justify-center gap-2"
               >
                 {isProcessing ? (
                   <>

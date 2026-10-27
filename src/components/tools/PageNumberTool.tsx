@@ -13,6 +13,7 @@ import { Progress, AlertDialog } from '@base-ui/react';
 import { ToolPageHeader } from '../common/ToolPageHeader';
 import { ToolFileDropzone } from '../common/ToolFileDropzone';
 import { usePageNumbers } from '../../hooks/pdf/usePageNumbers';
+import { useMobileResultScroll } from '../../hooks/useMobileResultScroll';
 import type { PageNumberPosition } from '../../core/pdf/page-numbers/pageNumbers.types';
 import { formatBytes, blobToUint8Array, readPdfPageCount } from '../../core/shared';
 
@@ -62,6 +63,7 @@ export function PageNumberTool() {
     objectUrl,
     progress
   } = usePageNumbers();
+  const resultRef = useMobileResultScroll(isSuccess && Boolean(result));
 
   const handleFile = useCallback(async (file: File) => {
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
@@ -128,18 +130,18 @@ export function PageNumberTool() {
 
       {/* Success State */}
       {isSuccess && result && objectUrl && (
-        <div className="mb-8 p-6 sm:p-8 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl">
+        <div ref={resultRef} className="mb-8 p-6 sm:p-8 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-emerald-100 dark:bg-emerald-900/40 rounded-xl text-emerald-600 dark:text-emerald-400 mt-1 sm:mt-0">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
                   Page Numbers Added Successfully!
                 </h2>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Numbered <span className="font-semibold text-slate-900 dark:text-white">{result.numberedPageCount} pages</span> in document ({formatBytes(result.byteLength)}).
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Numbered <span className="font-semibold text-gray-900 dark:text-white">{result.numberedPageCount} pages</span> in document ({formatBytes(result.byteLength)}).
                 </p>
               </div>
             </div>
@@ -148,7 +150,7 @@ export function PageNumberTool() {
               <a
                 href={objectUrl}
                 download={`${customFileName || 'numbered'}.pdf`}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--primary)] hover:opacity-90 text-white rounded-xl font-semibold shadow-sm transition-all text-sm"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent hover:opacity-90 text-accent-foreground rounded-xl font-semibold shadow-sm transition-all text-sm"
               >
                 <Download className="w-4 h-4" />
                 Download PDF
@@ -157,7 +159,7 @@ export function PageNumberTool() {
                 href={objectUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium transition-colors text-sm"
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors text-sm"
                 title="Preview in new tab"
               >
                 <ExternalLink className="w-4 h-4" />
@@ -165,7 +167,7 @@ export function PageNumberTool() {
               <button
                 type="button"
                 onClick={reset}
-                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium transition-colors text-sm"
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors text-sm"
                 title="Change settings"
               >
                 <RefreshCw className="w-4 h-4" />
@@ -226,16 +228,16 @@ export function PageNumberTool() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Configuration Card */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-              <div className="flex items-center gap-3 pb-6 border-b border-slate-100 dark:border-slate-800">
-                <div className="p-2.5 bg-blue-50 dark:bg-blue-950/50 rounded-xl text-[var(--primary)]">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+              <div className="flex items-center gap-3 pb-6 border-b border-gray-100 dark:border-gray-800">
+                <div className="p-2.5 bg-blue-50 dark:bg-blue-950/50 rounded-xl text-gray-900 dark:text-gray-100">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white text-base">
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-base">
                     {loadedPdf.file.name}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {formatBytes(loadedPdf.file.size)} • {loadedPdf.pageCount} pages
                   </p>
                 </div>
@@ -243,7 +245,7 @@ export function PageNumberTool() {
 
               {/* Format selection */}
               <div className="mt-6 space-y-4">
-                <label className="block text-sm font-semibold text-slate-900 dark:text-white">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white">
                   Numbering Format
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -252,11 +254,10 @@ export function PageNumberTool() {
                       key={preset}
                       type="button"
                       onClick={() => setFormat(preset)}
-                      className={`px-3 py-2 text-xs rounded-xl border font-mono transition-all text-left ${
-                        format === preset
-                          ? 'border-[var(--primary)] bg-blue-50/50 dark:bg-blue-950/30 text-[var(--primary)] font-bold'
-                          : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-300'
-                      }`}
+                      className={`px-3 py-2 text-xs rounded-xl border font-mono transition-all text-left ${format === preset
+                          ? 'border-accent bg-blue-50/50 dark:bg-blue-950/30 text-gray-900 dark:text-gray-100 font-bold'
+                          : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 text-gray-700 dark:text-gray-300'
+                        }`}
                     >
                       {preset}
                     </button>
@@ -264,7 +265,7 @@ export function PageNumberTool() {
                 </div>
 
                 <div>
-                  <label htmlFor="customFormat" className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
+                  <label htmlFor="customFormat" className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
                     Custom Template (use <code className="text-xs font-mono">{'{n}'}</code> for page number, <code className="text-xs font-mono">{'{total}'}</code> for total pages):
                   </label>
                   <input
@@ -272,14 +273,14 @@ export function PageNumberTool() {
                     type="text"
                     value={format}
                     onChange={(e) => setFormat(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)] font-mono"
+                    className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-accent font-mono"
                   />
                 </div>
               </div>
 
               {/* Position selector 3x2 grid */}
               <div className="mt-6 space-y-3">
-                <label className="block text-sm font-semibold text-slate-900 dark:text-white">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white">
                   Position on Page
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -290,11 +291,10 @@ export function PageNumberTool() {
                         key={pos.id}
                         type="button"
                         onClick={() => setPosition(pos.id)}
-                        className={`p-3 text-xs rounded-xl border text-center transition-all ${
-                          isSelected
-                            ? 'border-[var(--primary)] bg-blue-50/50 dark:bg-blue-950/30 text-[var(--primary)] font-bold shadow-xs'
-                            : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-300'
-                        }`}
+                        className={`p-3 text-xs rounded-xl border text-center transition-all ${isSelected
+                            ? 'border-accent bg-blue-50/50 dark:bg-blue-950/30 text-gray-900 dark:text-gray-100 font-bold shadow-xs'
+                            : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 text-gray-700 dark:text-gray-300'
+                          }`}
                       >
                         {pos.label}
                       </button>
@@ -304,9 +304,9 @@ export function PageNumberTool() {
               </div>
 
               {/* Detailed options: startFrom, fontSize, margin, color */}
-              <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800 grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
-                  <label htmlFor="startFrom" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="startFrom" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Start From
                   </label>
                   <input
@@ -315,12 +315,12 @@ export function PageNumberTool() {
                     min={1}
                     value={startFrom}
                     onChange={(e) => setStartFrom(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                    className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-accent"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="fontSize" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="fontSize" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Font Size (pt)
                   </label>
                   <input
@@ -330,12 +330,12 @@ export function PageNumberTool() {
                     max={72}
                     value={fontSize}
                     onChange={(e) => setFontSize(Math.max(6, parseInt(e.target.value) || 12))}
-                    className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                    className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-accent"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="margin" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="margin" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Margin (pt)
                   </label>
                   <input
@@ -345,12 +345,12 @@ export function PageNumberTool() {
                     max={150}
                     value={margin}
                     onChange={(e) => setMargin(Math.max(0, parseInt(e.target.value) || 30))}
-                    className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                    className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-accent"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="colorHex" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="colorHex" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Text Color
                   </label>
                   <div className="flex items-center gap-2">
@@ -359,13 +359,13 @@ export function PageNumberTool() {
                       type="color"
                       value={colorHex}
                       onChange={(e) => setColorHex(e.target.value)}
-                      className="w-8 h-9 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer bg-transparent"
+                      className="w-8 h-9 p-0.5 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer bg-transparent"
                     />
                     <input
                       type="text"
                       value={colorHex}
                       onChange={(e) => setColorHex(e.target.value)}
-                      className="w-full px-2 py-1.5 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 font-mono text-slate-900 dark:text-white"
+                      className="w-full px-2 py-1.5 text-xs border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 font-mono text-gray-900 dark:text-white"
                     />
                   </div>
                 </div>
@@ -373,16 +373,16 @@ export function PageNumberTool() {
 
               {/* Progress bar */}
               {isProcessing && (
-                <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800">
-                  <div className="flex justify-between text-xs text-slate-500 mb-1">
+                <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
+                  <div className="flex justify-between text-xs text-gray-500 mb-1">
                     <span>Numbering pages...</span>
                     <span className="font-mono">{progress}%</span>
                   </div>
-                  <Progress.Root value={progress} className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <Progress.Root value={progress} className="h-2 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                     <Progress.Track className="h-full w-full">
                       <Progress.Indicator
-                        style={{ transform: `translateX(-${100 - progress}%)` }}
-                        className="h-full bg-[var(--primary)] transition-transform duration-200"
+                        style={{ transform: `trangrayX(-${100 - progress}%)` }}
+                        className="h-full bg-accent transition-transform duration-200"
                       />
                     </Progress.Track>
                   </Progress.Root>
@@ -393,44 +393,44 @@ export function PageNumberTool() {
 
           {/* Interactive Preview & Action Sidebar */}
           <div className="space-y-6">
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-              <h3 className="font-semibold text-slate-900 dark:text-white text-sm mb-4 flex items-center gap-2">
-                <LayoutGrid className="w-4 h-4 text-[var(--primary)]" />
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-4 flex items-center gap-2">
+                <LayoutGrid className="w-4 h-4 rounded bg-accent p-0.5 text-accent-foreground" />
                 Live Placement Preview
               </h3>
 
               {/* Simulated Page Box */}
-              <div className="aspect-[3/4] max-w-[200px] mx-auto bg-white dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 rounded-xl relative p-3 shadow-inner flex flex-col justify-between">
+              <div className="aspect-[3/4] max-w-[200px] mx-auto bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 rounded-xl relative p-3 shadow-inner flex flex-col justify-between">
                 {/* Top slots */}
                 <div className="flex justify-between items-start text-[10px] font-mono leading-none">
-                  <span className={`transition-all ${position === 'top-left' ? 'text-[var(--primary)] font-bold scale-110' : 'text-slate-300 dark:text-slate-700'}`}>
+                  <span className={`transition-all ${position === 'top-left' ? 'text-gray-900 dark:text-gray-100 font-bold scale-110' : 'text-gray-300 dark:text-gray-700'}`}>
                     {position === 'top-left' ? format.replace('{n}', `${startFrom}`).replace('{total}', `${loadedPdf.pageCount + startFrom - 1}`) : '•'}
                   </span>
-                  <span className={`transition-all ${position === 'top-center' ? 'text-[var(--primary)] font-bold scale-110' : 'text-slate-300 dark:text-slate-700'}`}>
+                  <span className={`transition-all ${position === 'top-center' ? 'text-gray-900 dark:text-gray-100 font-bold scale-110' : 'text-gray-300 dark:text-gray-700'}`}>
                     {position === 'top-center' ? format.replace('{n}', `${startFrom}`).replace('{total}', `${loadedPdf.pageCount + startFrom - 1}`) : '•'}
                   </span>
-                  <span className={`transition-all ${position === 'top-right' ? 'text-[var(--primary)] font-bold scale-110' : 'text-slate-300 dark:text-slate-700'}`}>
+                  <span className={`transition-all ${position === 'top-right' ? 'text-gray-900 dark:text-gray-100 font-bold scale-110' : 'text-gray-300 dark:text-gray-700'}`}>
                     {position === 'top-right' ? format.replace('{n}', `${startFrom}`).replace('{total}', `${loadedPdf.pageCount + startFrom - 1}`) : '•'}
                   </span>
                 </div>
 
                 {/* Simulated document lines */}
                 <div className="space-y-2 opacity-20 px-2">
-                  <div className="h-1.5 bg-slate-400 rounded-full w-3/4 mx-auto" />
-                  <div className="h-1.5 bg-slate-400 rounded-full w-full" />
-                  <div className="h-1.5 bg-slate-400 rounded-full w-5/6" />
-                  <div className="h-1.5 bg-slate-400 rounded-full w-2/3" />
+                  <div className="h-1.5 bg-gray-400 rounded-full w-3/4 mx-auto" />
+                  <div className="h-1.5 bg-gray-400 rounded-full w-full" />
+                  <div className="h-1.5 bg-gray-400 rounded-full w-5/6" />
+                  <div className="h-1.5 bg-gray-400 rounded-full w-2/3" />
                 </div>
 
                 {/* Bottom slots */}
                 <div className="flex justify-between items-end text-[10px] font-mono leading-none">
-                  <span className={`transition-all ${position === 'bottom-left' ? 'text-[var(--primary)] font-bold scale-110' : 'text-slate-300 dark:text-slate-700'}`}>
+                  <span className={`transition-all ${position === 'bottom-left' ? 'text-gray-900 dark:text-gray-100 font-bold scale-110' : 'text-gray-300 dark:text-gray-700'}`}>
                     {position === 'bottom-left' ? format.replace('{n}', `${startFrom}`).replace('{total}', `${loadedPdf.pageCount + startFrom - 1}`) : '•'}
                   </span>
-                  <span className={`transition-all ${position === 'bottom-center' ? 'text-[var(--primary)] font-bold scale-110' : 'text-slate-300 dark:text-slate-700'}`}>
+                  <span className={`transition-all ${position === 'bottom-center' ? 'text-gray-900 dark:text-gray-100 font-bold scale-110' : 'text-gray-300 dark:text-gray-700'}`}>
                     {position === 'bottom-center' ? format.replace('{n}', `${startFrom}`).replace('{total}', `${loadedPdf.pageCount + startFrom - 1}`) : '•'}
                   </span>
-                  <span className={`transition-all ${position === 'bottom-right' ? 'text-[var(--primary)] font-bold scale-110' : 'text-slate-300 dark:text-slate-700'}`}>
+                  <span className={`transition-all ${position === 'bottom-right' ? 'text-gray-900 dark:text-gray-100 font-bold scale-110' : 'text-gray-300 dark:text-gray-700'}`}>
                     {position === 'bottom-right' ? format.replace('{n}', `${startFrom}`).replace('{total}', `${loadedPdf.pageCount + startFrom - 1}`) : '•'}
                   </span>
                 </div>
@@ -438,7 +438,7 @@ export function PageNumberTool() {
 
               {/* Output File Name */}
               <div className="mt-6">
-                <label htmlFor="customFileName" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                <label htmlFor="customFileName" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
                   Output Filename
                 </label>
                 <div className="flex items-center">
@@ -447,9 +447,9 @@ export function PageNumberTool() {
                     type="text"
                     value={customFileName}
                     onChange={(e) => setCustomFileName(e.target.value)}
-                    className="w-full px-3 py-2 text-xs border border-slate-200 dark:border-slate-700 rounded-l-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                    className="w-full px-3 py-2 text-xs border border-gray-200 dark:border-gray-700 rounded-l-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-accent"
                   />
-                  <span className="px-3 py-2 text-xs border border-l-0 border-slate-200 dark:border-slate-700 rounded-r-xl bg-slate-50 dark:bg-slate-800 text-slate-500 font-mono">
+                  <span className="px-3 py-2 text-xs border border-l-0 border-gray-200 dark:border-gray-700 rounded-r-xl bg-gray-50 dark:bg-gray-800 text-gray-500 font-mono">
                     .pdf
                   </span>
                 </div>
@@ -461,7 +461,7 @@ export function PageNumberTool() {
                   type="button"
                   onClick={handleExecute}
                   disabled={isProcessing}
-                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--primary)] hover:opacity-90 disabled:opacity-50 text-white rounded-xl font-semibold shadow-sm transition-all text-sm"
+                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent hover:opacity-90 disabled:opacity-50 text-accent-foreground rounded-xl font-semibold shadow-sm transition-all text-sm"
                 >
                   {isProcessing ? 'Numbering Pages...' : `Add Page Numbers (${loadedPdf.pageCount} Pages)`}
                 </button>
@@ -475,15 +475,15 @@ export function PageNumberTool() {
       <AlertDialog.Root open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
         <AlertDialog.Portal>
           <AlertDialog.Backdrop className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity z-50" />
-          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl z-50">
-            <AlertDialog.Title className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+          <AlertDialog.Popup className="fixed left-1/2 top-1/2 -trangray-x-1/2 -trangray-y-1/2 w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-xl z-50">
+            <AlertDialog.Title className="text-lg font-bold text-gray-900 dark:text-white mb-2">
               Clear Current Document?
             </AlertDialog.Title>
-            <AlertDialog.Description className="text-sm text-slate-600 dark:text-slate-400 mb-6">
+            <AlertDialog.Description className="text-sm text-gray-600 dark:text-gray-400 mb-6">
               This will discard the currently loaded document and any numbering settings.
             </AlertDialog.Description>
             <div className="flex justify-end gap-3">
-              <AlertDialog.Close className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
+              <AlertDialog.Close className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">
                 Cancel
               </AlertDialog.Close>
               <button

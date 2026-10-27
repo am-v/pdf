@@ -4,47 +4,47 @@ const currentYear = new Date().getFullYear();
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-slate-200/80 bg-white dark:border-slate-800/80 dark:bg-slate-950 transition-colors py-12 mt-20">
+    <footer className="w-full border-t border-gray-200/80 bg-white dark:border-gray-800/80 dark:bg-gray-950 transition-colors py-12 mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary-light text-primary flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-accent text-accent-foreground flex items-center justify-center shrink-0">
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">100% Privacy Guarantee</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">100% Privacy Guarantee</h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                 All document processing executes directly in your browser memory. Your confidential files are never uploaded to any remote server.
               </p>
             </div>
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary-light text-primary flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-accent text-accent-foreground flex items-center justify-center shrink-0">
               <Cpu className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">WebAssembly Performance</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">WebAssembly Performance</h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                 Engineered with high-speed WebAssembly engines (QPDF, PDF-Lib) for lightning-fast file manipulation even on large multi-page documents.
               </p>
             </div>
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary-light text-primary flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-accent text-accent-foreground flex items-center justify-center shrink-0">
               <Lock className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">Open & Auditable</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">Open & Auditable</h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                 Released under the MIT License. Zero trackers, zero advertisements, zero data harvesting.{' '}
                 <br />
                 <a
                   href="https://github.com/am-v/pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline underline-offset-2 hover:text-primary"
+                  className="underline underline-offset-2 hover:text-gray-900 dark:hover:text-gray-100"
                 >
                   Source code
                 </a>
@@ -53,7 +53,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 dark:text-slate-500">
+        <div className="pt-8 border-t border-gray-200/60 dark:border-gray-800/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400 dark:text-gray-500">
           <p>© {currentYear} pdf.com.in — Open Source Privacy-First PDF Toolkit.</p>
           <p className="inline-flex items-center gap-2">
             <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -68,7 +68,7 @@ export function Footer() {
               </g>
               <defs>
                 <clipPath id="clip0_0_2896">
-                  <rect width="22" height="21.8382" fill="white" transform="translate(0 0.584473)" />
+                  <rect width="22" height="21.8382" fill="white" transform="trangray(0 0.584473)" />
                 </clipPath>
               </defs>
             </svg>

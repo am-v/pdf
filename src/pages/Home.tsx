@@ -52,7 +52,7 @@ export function Home() {
       </div>
 
       {/* Controls: Search and Category Tabs */}
-      <div className="flex flex-col items-center gap-6 mb-10">
+      <div className="flex flex-col items-center gap-6 mb-10 w-full max-w-full">
         {/* Search Bar */}
         <div className="relative w-full max-w-md">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />

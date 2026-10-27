@@ -48,3 +48,12 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
 }
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
